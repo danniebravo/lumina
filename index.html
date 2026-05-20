@@ -1,1372 +1,425 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Lúmina · Esta es tu Medellín</title>
-  <link rel="icon" type="image/png" href="archivos/LUMINA_LOGO.png" />
-  <link rel="apple-touch-icon" href="archivos/LUMINA_LOGO.png" />
+  <meta name="description"
+    content="LÚMINA · Una luciérnaga que te lleva a los rincones de Medellín que la ciudad guarda en silencio. Descubre cafés, panaderías y lugares que no aparecen en mapas." />
+
+  <meta property="og:title" content="LÚMINA · Esta es tu Medellín" />
+  <meta property="og:description"
+    content="Una luciérnaga que te lleva a los rincones de Medellín que la ciudad guarda en silencio. Descubre cafés, panaderías y lugares que no aparecen en mapas." />
+  <meta property="og:image" content="img/logo/lumina-logo.png" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="icon" type="image/png" href="img/logo/lumina-logo.png" />
+  <link rel="apple-touch-icon" href="img/logo/lumina-logo.png" />
+
+  <link rel="preload" as="image" href="img/atmosfera/8.webp" type="image/webp" fetchpriority="high" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="shared/tokens.css" />
-  <style>
-    :root {
-      /* afinamos la paleta hacia los ámbares de las fotos */
-      --honey:        #f0b15a;
-      --ember:        #c46a32;
-      --night:        #07060a;
-      --night-2:      #110b08;
-    }
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
 
-    html, body { scroll-behavior: smooth; }
-    body { overflow-x: hidden; background: var(--night); }
-
-    /* ============== PROGRESS BAR ============== */
-    .progress {
-      position: fixed; top: 0; left: 0; right: 0; height: 2px;
-      background: rgba(255,255,255,0.06); z-index: 200;
-    }
-    .progress-bar {
-      height: 100%; width: 0;
-      background: linear-gradient(90deg, var(--accent), var(--honey));
-      transition: width 0.1s linear;
-    }
-
-    /* ============== NAVBAR ============== */
-    .nav {
-      position: fixed;
-      top: 18px; left: 28px; right: 28px;
-      z-index: 100;
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: center;
-      padding: 10px 18px;
-      background: rgba(7, 6, 10, 0.55);
-      backdrop-filter: blur(18px) saturate(140%);
-      -webkit-backdrop-filter: blur(18px) saturate(140%);
-      border: 1px solid var(--line);
-      border-radius: var(--r-pill);
-    }
-    .nav .brand {
-      display: inline-flex; align-items: center; gap: 12px;
-      font-family: var(--font-display);
-      font-weight: 500;
-      font-size: 22px;
-      letter-spacing: 0.01em;
-      justify-self: start;
-    }
-    .nav .brand img {
-      width: 36px; height: 36px;
-      filter: drop-shadow(0 0 16px rgba(255, 174, 107, 0.55));
-    }
-    .nav .brand span { letter-spacing: 0.04em; }
-    .nav-links {
-      justify-self: center;
-      display: flex; gap: 36px;
-      font-size: 13px;
-      letter-spacing: 0.04em;
-      color: var(--muted);
-    }
-    .nav-links a {
-      position: relative;
-      padding: 6px 2px;
-      transition: color .25s ease;
-    }
-    .nav-links a::after {
-      content: "";
-      position: absolute; left: 0; right: 0; bottom: -2px;
-      height: 1px;
-      background: var(--accent);
-      transform: scaleX(0);
-      transform-origin: center;
-      transition: transform .3s ease;
-    }
-    .nav-links a:hover { color: var(--fg); }
-    .nav-links a:hover::after { transform: scaleX(1); }
-    .nav-cta {
-      justify-self: end;
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 10px 18px;
-      border-radius: var(--r-pill);
-      background: linear-gradient(135deg, var(--accent), var(--honey));
-      color: #1a0d05;
-      font-weight: 700;
-      font-size: 12.5px;
-      letter-spacing: 0.04em;
-      box-shadow: 0 10px 30px -12px rgba(255, 174, 107, 0.6);
-      transition: transform .25s ease, box-shadow .25s ease;
-    }
-    .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 14px 38px -10px rgba(255, 174, 107, 0.85); }
-    .nav-cta .spark { font-size: 14px; }
-
-    /* ============== STEPPER ============== */
-    .stepper {
-      position: fixed;
-      right: 28px; top: 50%;
-      transform: translateY(-50%);
-      z-index: 90;
-      display: flex; flex-direction: column; gap: 16px;
-    }
-    .stepper a {
-      display: flex; align-items: center; gap: 10px;
-      font-size: 10.5px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-    .stepper a .pill {
-      width: 22px; height: 3px;
-      background: rgba(255,255,255,0.14);
-      border-radius: 4px;
-      transition: width .3s ease, background .3s ease;
-    }
-    .stepper a.active { color: var(--fg); }
-    .stepper a.active .pill { width: 52px; background: var(--accent); }
-
-    /* ============== HERO / BIENVENIDA ============== */
-    .hero {
-      position: relative;
-      min-height: 100vh;
-      padding: 140px 80px 100px;
-      display: flex;
-      align-items: center;
-      overflow: hidden;
-    }
-    .hero-bg {
-      position: absolute; inset: 0;
-      background: url("archivos/Fotos/8.jpeg") center 30% / cover no-repeat;
-      filter: saturate(0.85) brightness(0.55);
-      transform: scale(1.05);
-    }
-    .hero-bg::after {
-      content: "";
-      position: absolute; inset: 0;
-      background:
-        radial-gradient(900px 600px at 75% 25%, rgba(255, 140, 66, 0.22), transparent 65%),
-        radial-gradient(700px 500px at 15% 80%, rgba(196, 106, 50, 0.30), transparent 70%),
-        linear-gradient(180deg, rgba(7, 6, 10, 0.55) 0%, rgba(7, 6, 10, 0.65) 50%, rgba(7, 6, 10, 0.95) 100%);
-    }
-    .hero-grain {
-      position: absolute; inset: 0;
-      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-      mix-blend-mode: overlay;
-      opacity: 0.55;
-      pointer-events: none;
-    }
-    .hero-inner {
-      position: relative;
-      max-width: 1200px;
-      margin: 0 auto;
-      width: 100%;
-    }
-    .hero .eyebrow-row {
-      display: inline-flex; align-items: center; gap: 12px;
-      font-size: 11px;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--honey);
-      margin-bottom: 28px;
-    }
-    .hero .eyebrow-row .firefly {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--honey);
-      box-shadow: 0 0 14px var(--honey), 0 0 28px rgba(255, 174, 107, 0.55);
-      animation: pulse 2.4s ease-in-out infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 0.4; transform: scale(0.85); }
-      50% { opacity: 1; transform: scale(1.1); }
-    }
-    .hero h1 {
-      font-family: var(--font-display);
-      font-weight: 300;
-      font-size: clamp(46px, 6.2vw, 92px);
-      line-height: 1.02;
-      letter-spacing: -0.02em;
-      max-width: 18ch;
-      margin-bottom: 32px;
-    }
-    .hero h1 em {
-      font-style: italic;
-      background: linear-gradient(120deg, var(--accent), var(--honey));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    .hero .lede {
-      max-width: 640px;
-      font-size: 18px;
-      line-height: 1.65;
-      color: rgba(250, 246, 240, 0.82);
-      margin-bottom: 22px;
-    }
-    .hero .lede strong {
-      color: var(--fg);
-      font-weight: 500;
-    }
-    .hero .signature {
-      font-family: var(--font-display);
-      font-style: italic;
-      font-size: 22px;
-      color: var(--honey);
-      letter-spacing: 0.02em;
-      margin-bottom: 44px;
-    }
-    .hero .signature span { opacity: 0.5; margin: 0 6px; }
-    .hero-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 14px;
-      padding: 18px 30px;
-      border-radius: var(--r-pill);
-      background: linear-gradient(135deg, var(--accent), var(--honey));
-      color: #1a0d05;
-      font-weight: 700;
-      font-size: 14.5px;
-      letter-spacing: 0.04em;
-      box-shadow: 0 18px 50px -16px rgba(255, 174, 107, 0.75);
-      transition: transform .3s ease, box-shadow .3s ease;
-    }
-    .hero-cta:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 24px 60px -14px rgba(255, 174, 107, 0.95);
-    }
-    .hero-cta .arrow { transition: transform .3s ease; }
-    .hero-cta:hover .arrow { transform: translateX(6px); }
-
-    .hero-scroll {
-      position: absolute;
-      bottom: 32px; left: 50%;
-      transform: translateX(-50%);
-      font-size: 10.5px;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--muted);
-      display: flex; flex-direction: column; align-items: center; gap: 10px;
-    }
-    .hero-scroll .line {
-      width: 1px; height: 36px;
-      background: linear-gradient(180deg, var(--honey), transparent);
-      animation: scrollLine 2s ease-in-out infinite;
-    }
-    @keyframes scrollLine {
-      0% { transform: scaleY(0.2); transform-origin: top; }
-      50% { transform: scaleY(1); transform-origin: top; }
-      51% { transform: scaleY(1); transform-origin: bottom; }
-      100% { transform: scaleY(0.2); transform-origin: bottom; }
-    }
-
-    /* ============== PHOTO STRIP (lugares preview) ============== */
-    .strip {
-      position: relative;
-      padding: 90px 0 50px;
-      background: linear-gradient(180deg, var(--night) 0%, var(--night-2) 100%);
-    }
-    .strip-head {
-      max-width: 1200px;
-      margin: 0 auto 36px;
-      padding: 0 80px;
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 40px;
-    }
-    .strip-head .num {
-      font-family: var(--font-display);
-      font-style: italic;
-      font-size: 14px;
-      color: var(--honey);
-      letter-spacing: 0.04em;
-      display: block;
-      margin-bottom: 10px;
-    }
-    .strip-head h2 {
-      font-family: var(--font-display);
-      font-weight: 300;
-      font-size: clamp(32px, 3.4vw, 50px);
-      line-height: 1.05;
-      letter-spacing: -0.01em;
-      max-width: 18ch;
-    }
-    .strip-head h2 em {
-      font-style: italic;
-      color: var(--honey);
-    }
-    .strip-head .hint {
-      max-width: 280px;
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.55;
-    }
-    .strip-track {
-      display: flex;
-      gap: 18px;
-      padding: 10px 80px 30px;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      scrollbar-width: none;
-    }
-    .strip-track::-webkit-scrollbar { display: none; }
-    .strip-card {
-      position: relative;
-      flex: 0 0 320px;
-      aspect-ratio: 4 / 5;
-      border-radius: 18px;
-      overflow: hidden;
-      scroll-snap-align: start;
-      cursor: pointer;
-      transition: transform .5s cubic-bezier(.2,.7,.2,1);
-    }
-    .strip-card .img {
-      position: absolute; inset: 0;
-      background-size: cover; background-position: center;
-      transition: transform .8s ease, filter .5s ease;
-      filter: saturate(0.95) brightness(0.85);
-    }
-    .strip-card::after {
-      content: "";
-      position: absolute; inset: 0;
-      background: linear-gradient(180deg, transparent 40%, rgba(7, 6, 10, 0.85) 100%);
-    }
-    .strip-card .label {
-      position: absolute;
-      bottom: 22px; left: 22px; right: 22px;
-      z-index: 2;
-    }
-    .strip-card .label .name {
-      font-family: var(--font-display);
-      font-weight: 500;
-      font-size: 22px;
-      line-height: 1.1;
-      color: var(--fg);
-    }
-    .strip-card .label .place {
-      font-size: 10.5px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--honey);
-      margin-top: 6px;
-      display: inline-flex; align-items: center; gap: 8px;
-    }
-    .strip-card .label .place::before {
-      content: "";
-      width: 5px; height: 5px;
-      border-radius: 50%;
-      background: var(--honey);
-      box-shadow: 0 0 8px var(--honey);
-    }
-    .strip-card:hover { transform: translateY(-6px); }
-    .strip-card:hover .img { transform: scale(1.06); filter: saturate(1.1) brightness(1); }
-
-    /* ============== STEPS ============== */
-    section.step {
-      min-height: 100vh;
-      padding: 120px 80px;
-      display: flex;
-      align-items: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .step-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: center;
-      width: 100%;
-      position: relative;
-      z-index: 2;
-    }
-    .step-text .num {
-      font-family: var(--font-display);
-      font-style: italic;
-      font-size: 18px;
-      color: var(--honey);
-      letter-spacing: 0.04em;
-      margin-bottom: 16px;
-      display: inline-block;
-    }
-    .step-text h2 {
-      font-family: var(--font-display);
-      font-weight: 300;
-      font-size: clamp(54px, 6.4vw, 96px);
-      line-height: 1.0;
-      letter-spacing: -0.02em;
-      margin-bottom: 24px;
-    }
-    .step-text h2 em {
-      font-style: italic;
-      color: var(--accent);
-    }
-    .step-text p {
-      font-size: 18px;
-      line-height: 1.55;
-      color: var(--muted);
-      max-width: 460px;
-      margin-bottom: 14px;
-    }
-
-    /* ============== STEP 1 — DESCUBRE: silueta nocturna ============== */
-    #descubre {
-      background: linear-gradient(180deg, var(--night-2) 0%, #0a0604 100%);
-    }
-    #descubre .skyline {
-      position: absolute;
-      left: 0; right: 0; bottom: 0;
-      height: 62%;
-      pointer-events: none;
-      z-index: 1;
-      opacity: 0.85;
-    }
-    #descubre .skyline svg {
-      width: 100%; height: 100%;
-      display: block;
-    }
-    #descubre .stars {
-      position: absolute; inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      background-image:
-        radial-gradient(1px 1px at 12% 22%, rgba(255,255,255,0.7), transparent 50%),
-        radial-gradient(1px 1px at 28% 14%, rgba(255,220,160,0.6), transparent 50%),
-        radial-gradient(1.5px 1.5px at 47% 8%, rgba(255,255,255,0.85), transparent 50%),
-        radial-gradient(1px 1px at 62% 18%, rgba(255,200,140,0.7), transparent 50%),
-        radial-gradient(1px 1px at 80% 12%, rgba(255,255,255,0.5), transparent 50%),
-        radial-gradient(1px 1px at 91% 26%, rgba(255,220,160,0.7), transparent 50%);
-    }
-    .scene-discover {
-      position: relative;
-      aspect-ratio: 1 / 1;
-      max-width: 540px;
-      margin: 0 auto;
-    }
-    .scene-discover canvas { width: 100%; height: 100%; }
-
-    /* ============== STEP 2 — VIVE: glass cards con fotos ============== */
-    .scene-vive {
-      position: relative;
-      width: 100%;
-      max-width: 540px;
-      aspect-ratio: 1 / 1;
-      margin: 0 auto;
-    }
-    .scene-vive::before,
-    .scene-vive::after {
-      content: "";
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(60px);
-      opacity: 0;
-      transition: opacity 1.2s ease .15s;
-      pointer-events: none;
-    }
-    .scene-vive::before {
-      width: 320px; height: 320px;
-      top: -20px; left: -40px;
-      background: radial-gradient(circle, rgba(255,140,66,0.42), transparent 65%);
-    }
-    .scene-vive::after {
-      width: 280px; height: 280px;
-      bottom: -10px; right: -20px;
-      background: radial-gradient(circle, rgba(196,106,50,0.38), transparent 65%);
-    }
-    .step.in .scene-vive::before,
-    .step.in .scene-vive::after { opacity: 1; }
-
-    .glass-card {
-      position: absolute;
-      width: 230px;
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(22px) saturate(160%);
-      -webkit-backdrop-filter: blur(22px) saturate(160%);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      box-shadow:
-        0 30px 60px -22px rgba(0, 0, 0, 0.65),
-        inset 0 1px 0 rgba(255, 255, 255, 0.10);
-      overflow: hidden;
-      opacity: 0;
-      transform: translateY(40px) rotate(0);
-      transition: opacity .9s ease, transform .9s cubic-bezier(.2,.7,.2,1), box-shadow .45s ease, border-color .45s ease;
-      cursor: pointer;
-      z-index: 1;
-    }
-    .step.in .glass-card:hover {
-      z-index: 10;
-      border-color: rgba(255, 194, 102, 0.45);
-      box-shadow:
-        0 35px 70px -18px rgba(0, 0, 0, 0.7),
-        0 0 0 1px rgba(255, 194, 102, 0.35),
-        0 0 50px -2px rgba(255, 194, 102, 0.55),
-        0 0 110px rgba(255, 174, 107, 0.35),
-        inset 0 1px 0 rgba(255, 255, 255, 0.18);
-      transition: transform .45s cubic-bezier(.2,.7,.2,1), box-shadow .45s ease, border-color .45s ease, opacity .9s ease;
-      transition-delay: 0s;
-    }
-    .step.in .glass-card.c1:hover { transform: translate(0, -10px) rotate(0deg) scale(1.06); }
-    .step.in .glass-card.c2:hover { transform: translate(190px, 30px) rotate(0deg) scale(1.06); }
-    .step.in .glass-card.c3:hover { transform: translate(70px, 200px) rotate(0deg) scale(1.06); }
-    .glass-card .img {
-      width: 100%; aspect-ratio: 4 / 3;
-      background-size: cover;
-      background-position: center;
-      position: relative;
-    }
-    .glass-card .img::after {
-      content: "";
-      position: absolute; inset: 0;
-      background: linear-gradient(180deg, transparent 55%, rgba(0,0,0,0.45) 100%);
-    }
-    .glass-card .meta {
-      padding: 14px 16px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-    .glass-card .meta .text { min-width: 0; }
-    .glass-card .meta .name {
-      font-family: var(--font-display);
-      font-weight: 500;
-      font-size: 17px;
-      color: var(--fg);
-      line-height: 1.15;
-      letter-spacing: -0.01em;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .glass-card .meta .place {
-      font-size: 10px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-top: 4px;
-    }
-    .glass-card .meta .pin {
-      width: 30px; height: 30px;
-      border-radius: 50%;
-      background: rgba(255, 140, 66, 0.18);
-      border: 1px solid rgba(255, 174, 107, 0.4);
-      display: grid; place-items: center;
-      flex-shrink: 0;
-    }
-    .glass-card .meta .pin::before {
-      content: "";
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 10px var(--accent-glow);
-    }
-    .step.in .glass-card { opacity: 1; }
-    .step.in .glass-card.c1 { transform: translate(0, 0) rotate(-5deg);   transition-delay: .05s; }
-    .step.in .glass-card.c2 { transform: translate(190px, 40px) rotate(4deg); transition-delay: .25s; }
-    .step.in .glass-card.c3 { transform: translate(70px, 210px) rotate(-2deg); transition-delay: .45s; }
-
-    .glass-card.c1 { top: 20px;  left: 10px; }
-    .glass-card.c2 { top: 0;     left: 0; }
-    .glass-card.c3 { top: 0;     left: 0; }
-
-    .glass-card.c1 .img { background-image: url("archivos/Fotos/1.jpeg"); }
-    .glass-card.c2 .img { background-image: url("archivos/Fotos/2.jpeg"); }
-    .glass-card.c3 .img { background-image: url("archivos/Fotos/9.jpeg"); }
-
-    /* ============== STEP 3 — REGISTRA: postal interactiva ============== */
-    .scene-postcard {
-      perspective: 1500px;
-      width: 100%; max-width: 560px; aspect-ratio: 4 / 3;
-      margin: 0 auto;
-      position: relative;
-    }
-    .postcard {
-      position: absolute;
-      inset: 0;
-      transform-style: preserve-3d;
-      transform: rotateY(0deg);
-      transition: transform 1s cubic-bezier(.2,.7,.2,1);
-      cursor: pointer;
-    }
-    .postcard.flipped { transform: rotateY(180deg); }
-
-    .postcard-face {
-      position: absolute; inset: 0;
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-      border-radius: 8px;
-      box-shadow:
-        0 30px 80px -20px rgba(0,0,0,0.7),
-        0 0 0 1px rgba(255, 174, 107, 0.18);
-      overflow: hidden;
-    }
-    /* FRONT — foto del lugar */
-    .postcard-front {
-      background: url("archivos/Fotos/5.jpeg") center / cover no-repeat;
-    }
-    .postcard-front::after {
-      content: "";
-      position: absolute; inset: 0;
-      background:
-        linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.55) 100%),
-        radial-gradient(800px 400px at 30% 30%, rgba(255, 174, 107, 0.15), transparent 60%);
-    }
-    .postcard-front .corner {
-      position: absolute;
-      top: 18px; right: 18px;
-      width: 70px; height: 90px;
-      border: 2px solid rgba(255,255,255,0.55);
-      background: rgba(255, 174, 107, 0.18);
-      backdrop-filter: blur(6px);
-      display: grid; place-items: center;
-      transform: rotate(8deg);
-    }
-    .postcard-front .corner span {
-      font-family: var(--font-display);
-      font-style: italic;
-      font-size: 11px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: #fff;
-      text-align: center;
-      line-height: 1.2;
-    }
-    .postcard-front .place-tag {
-      position: absolute;
-      bottom: 26px; left: 30px;
-      color: #fff;
-      z-index: 2;
-    }
-    .postcard-front .place-tag .label {
-      font-size: 10.5px;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--honey);
-      margin-bottom: 8px;
-      display: inline-flex; align-items: center; gap: 8px;
-    }
-    .postcard-front .place-tag .label::before {
-      content: ""; width: 6px; height: 6px; border-radius: 50%;
-      background: var(--honey); box-shadow: 0 0 10px var(--honey);
-    }
-    .postcard-front .place-tag .name {
-      font-family: var(--font-display);
-      font-weight: 500;
-      font-size: 30px;
-      line-height: 1.05;
-    }
-    .postcard-front .flip-hint {
-      position: absolute;
-      bottom: 26px; right: 30px;
-      font-size: 11px;
-      color: rgba(255,255,255,0.78);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: rgba(0,0,0,0.35);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255,255,255,0.18);
-      transition: background .25s ease, border-color .25s ease;
-    }
-    .postcard:hover .flip-hint {
-      background: rgba(255, 174, 107, 0.18);
-      border-color: rgba(255, 174, 107, 0.55);
-    }
-    /* BACK — la postal escrita */
-    .postcard-back {
-      transform: rotateY(180deg);
-      background: linear-gradient(180deg, #f6efdf 0%, #ede1c4 100%);
-      color: #2b1a0e;
-      display: grid;
-      grid-template-columns: 1.05fr 1fr;
-    }
-    .postcard-back .left {
-      padding: 26px 24px 24px;
-      border-right: 1.5px dashed rgba(43, 26, 14, 0.25);
-      display: flex; flex-direction: column;
-    }
-    .postcard-back .head {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 14px;
-    }
-    .postcard-back .head .date {
-      font-family: var(--font-display);
-      font-style: italic;
-      font-size: 13px;
-      color: #8a5a30;
-      letter-spacing: 0.04em;
-    }
-    .postcard-back .head .from {
-      font-size: 9.5px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: #8a5a30;
-    }
-    .postcard-back .pname {
-      font-family: var(--font-display);
-      font-size: 26px;
-      font-weight: 500;
-      line-height: 1.1;
-      margin-bottom: 12px;
-    }
-    .postcard-back .entry {
-      font-family: "Caveat", cursive;
-      font-size: 21px;
-      line-height: 1.35;
-      color: #3a2010;
-      flex: 1;
-    }
-    .postcard-back .stamps {
-      display: flex; gap: 6px; flex-wrap: wrap;
-      margin-top: 18px;
-    }
-    .stamp {
-      font-size: 10px;
-      letter-spacing: 0.08em;
-      padding: 5px 10px;
-      border: 1.5px solid #c4632a;
-      color: #c4632a;
-      border-radius: 999px;
-      text-transform: uppercase;
-      font-family: var(--font-body);
-      font-weight: 700;
-      background: rgba(196, 99, 42, 0.06);
-    }
-    .postcard-back .right {
-      padding: 26px 24px 24px;
-      display: flex; flex-direction: column;
-      align-items: stretch;
-    }
-    .postcard-back .stamp-square {
-      align-self: flex-end;
-      width: 78px; height: 92px;
-      border: 2px dashed rgba(196, 99, 42, 0.55);
-      padding: 6px;
-      transform: rotate(4deg);
-    }
-    .postcard-back .stamp-square .inner {
-      width: 100%; height: 100%;
-      background:
-        radial-gradient(circle at 30% 30%, var(--honey), var(--ember));
-      border-radius: 2px;
-      position: relative;
-      display: grid; place-items: center;
-    }
-    .postcard-back .stamp-square .inner::before {
-      content: "✦";
-      color: #fff8e8;
-      font-size: 26px;
-      filter: drop-shadow(0 0 6px rgba(255, 220, 160, 0.7));
-    }
-    .postcard-back .lines {
-      flex: 1;
-      margin-top: 30px;
-      display: flex; flex-direction: column; gap: 14px;
-      padding-right: 10px;
-    }
-    .postcard-back .lines .line {
-      height: 1px;
-      background: rgba(43, 26, 14, 0.22);
-    }
-    .postcard-back .destination {
-      margin-top: 14px;
-      font-family: var(--font-display);
-      font-style: italic;
-      font-size: 16px;
-      color: #6b3f1c;
-    }
-    .postcard-back .destination strong {
-      display: block;
-      font-style: normal;
-      font-weight: 500;
-      font-size: 18px;
-      color: #2b1a0e;
-      letter-spacing: 0.02em;
-    }
-
-    .scene-postcard .tape {
-      position: absolute;
-      top: -14px; left: 22%;
-      width: 110px; height: 26px;
-      background: rgba(255, 220, 170, 0.55);
-      transform: rotate(-6deg);
-      box-shadow: 0 4px 14px rgba(0,0,0,0.25);
-      z-index: 5;
-      pointer-events: none;
-    }
-
-    /* ============== STEP 4 — COMPARTE: linterna sobre constelación ============== */
-    #comparte { background: linear-gradient(180deg, #0a0604 0%, var(--night) 100%); }
-    .scene-share {
-      width: 100%; max-width: 560px; aspect-ratio: 1/1;
-      margin: 0 auto;
-      position: relative;
-      border-radius: 24px;
-      overflow: hidden;
-      cursor: none;
-      background:
-        radial-gradient(circle at 50% 50%, #0e0805 0%, #060403 80%);
-      border: 1px solid rgba(255, 174, 107, 0.10);
-    }
-    .scene-share::before {
-      content: "";
-      position: absolute; inset: 0;
-      background-image:
-        radial-gradient(1px 1px at 14% 22%, rgba(255,255,255,0.5), transparent 60%),
-        radial-gradient(1px 1px at 30% 70%, rgba(255,220,160,0.45), transparent 60%),
-        radial-gradient(1px 1px at 60% 30%, rgba(255,255,255,0.6), transparent 60%),
-        radial-gradient(1px 1px at 84% 64%, rgba(255,255,255,0.4), transparent 60%),
-        radial-gradient(1px 1px at 92% 18%, rgba(255,220,160,0.5), transparent 60%);
-      opacity: 0.5;
-    }
-    .scene-share .torch {
-      position: absolute;
-      pointer-events: none;
-      width: 320px; height: 320px;
-      transform: translate(-50%, -50%);
-      left: 50%; top: 50%;
-      background: radial-gradient(circle, rgba(255, 220, 170, 0.32) 0%, rgba(255, 174, 107, 0.16) 30%, transparent 65%);
-      mix-blend-mode: screen;
-      filter: blur(2px);
-      transition: opacity .3s ease;
-      z-index: 4;
-    }
-    .scene-share svg {
-      position: absolute;
-      inset: 0;
-      width: 100%; height: 100%;
-      z-index: 2;
-    }
-    .scene-share .const-mask {
-      position: absolute; inset: 0;
-      background: rgba(7, 6, 10, 0.88);
-      -webkit-mask: radial-gradient(circle 160px at var(--mx, 50%) var(--my, 50%), black 0%, rgba(0,0,0,0.35) 55%, transparent 80%);
-      mask: radial-gradient(circle 160px at var(--mx, 50%) var(--my, 50%), black 0%, rgba(0,0,0,0.35) 55%, transparent 80%);
-      -webkit-mask-composite: source-out;
-      mask-composite: exclude;
-      transition: opacity .3s ease;
-      z-index: 3;
-    }
-    .const-line {
-      stroke: var(--honey);
-      stroke-width: 1;
-      fill: none;
-      stroke-dasharray: 1 1;
-      opacity: 0;
-      transition: opacity .8s ease;
-    }
-    .step.in .const-line { opacity: .55; }
-    .const-node {
-      fill: var(--honey);
-      filter: drop-shadow(0 0 10px var(--accent));
-      transform-origin: center;
-      transform: scale(0);
-      transition: transform .5s cubic-bezier(.2, .7, .2, 1.4);
-    }
-    .step.in .const-node { transform: scale(1); }
-    .const-label {
-      font-family: var(--font-body);
-      font-size: 10px;
-      fill: var(--fg);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      opacity: 0;
-      transition: opacity .8s ease;
-    }
-    .step.in .const-label { opacity: 1; }
-    .scene-share .hint {
-      position: absolute;
-      left: 24px; bottom: 22px;
-      z-index: 5;
-      font-size: 11px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--muted);
-      pointer-events: none;
-    }
-
-    /* ============== END CTA / CIERRE ============== */
-    .closing {
-      position: relative;
-      padding: 160px 80px 200px;
-      overflow: hidden;
-      text-align: center;
-    }
-    .closing-bg {
-      position: absolute; inset: 0;
-      background: url("archivos/Fotos/6.jpeg") center 30% / cover no-repeat;
-      filter: saturate(0.75) brightness(0.45);
-    }
-    .closing-bg::after {
-      content: "";
-      position: absolute; inset: 0;
-      background:
-        radial-gradient(900px 500px at 50% 30%, rgba(255, 174, 107, 0.20), transparent 65%),
-        linear-gradient(180deg, rgba(7, 6, 10, 0.85) 0%, rgba(7, 6, 10, 0.95) 100%);
-    }
-    .closing-inner {
-      position: relative;
-      max-width: 920px;
-      margin: 0 auto;
-    }
-    .closing .firefly {
-      width: 12px; height: 12px;
-      border-radius: 50%;
-      background: var(--honey);
-      box-shadow: 0 0 24px var(--honey), 0 0 50px rgba(255, 174, 107, 0.6);
-      margin: 0 auto 28px;
-      animation: pulse 2.4s ease-in-out infinite;
-    }
-    .closing h3 {
-      font-family: var(--font-display);
-      font-weight: 300;
-      font-size: clamp(40px, 5.4vw, 78px);
-      line-height: 1.04;
-      max-width: 18ch;
-      margin: 0 auto 28px;
-      letter-spacing: -0.02em;
-    }
-    .closing h3 em {
-      font-style: italic;
-      background: linear-gradient(120deg, var(--accent), var(--honey));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    .closing p {
-      max-width: 600px;
-      margin: 0 auto 44px;
-      font-size: 17px;
-      line-height: 1.65;
-      color: rgba(250, 246, 240, 0.78);
-    }
-    .closing-actions {
-      display: inline-flex;
-      align-items: center;
-      gap: 18px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .closing-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 14px;
-      padding: 18px 32px;
-      border-radius: var(--r-pill);
-      background: linear-gradient(135deg, var(--accent), var(--honey));
-      color: #1a0d05;
-      font-weight: 700;
-      font-size: 14.5px;
-      letter-spacing: 0.04em;
-      box-shadow: 0 18px 50px -16px rgba(255, 174, 107, 0.75);
-      transition: transform .3s ease, box-shadow .3s ease;
-    }
-    .closing-cta:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 24px 60px -14px rgba(255, 174, 107, 0.95);
-    }
-    .closing-ghost {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 16px 26px;
-      border-radius: var(--r-pill);
-      border: 1px solid rgba(255, 174, 107, 0.4);
-      color: var(--fg);
-      font-size: 13.5px;
-      letter-spacing: 0.04em;
-      transition: background .25s ease, border-color .25s ease;
-    }
-    .closing-ghost:hover {
-      background: rgba(255, 174, 107, 0.08);
-      border-color: var(--honey);
-    }
-
-    /* ============== FOOTER ============== */
-    footer {
-      position: relative;
-      padding: 70px 80px 50px;
-      background: #060403;
-      border-top: 1px solid var(--line);
-    }
-    .footer-grid {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1.4fr 1fr 1fr 1fr;
-      gap: 60px;
-      margin-bottom: 50px;
-    }
-    .footer-brand {
-      display: flex; align-items: center; gap: 14px;
-      margin-bottom: 18px;
-    }
-    .footer-brand img {
-      width: 44px; height: 44px;
-      filter: drop-shadow(0 0 18px rgba(255, 174, 107, 0.55));
-    }
-    .footer-brand .name {
-      font-family: var(--font-display);
-      font-weight: 500;
-      font-size: 26px;
-      letter-spacing: 0.04em;
-    }
-    .footer-tag {
-      max-width: 320px;
-      font-size: 14px;
-      line-height: 1.6;
-      color: var(--muted);
-    }
-    .footer-col h4 {
-      font-size: 11px;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--honey);
-      margin-bottom: 18px;
-      font-weight: 600;
-    }
-    .footer-col a {
-      display: block;
-      font-size: 14px;
-      color: var(--muted);
-      padding: 4px 0;
-      transition: color .2s ease;
-    }
-    .footer-col a:hover { color: var(--fg); }
-    .footer-bottom {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding-top: 24px;
-      border-top: 1px solid var(--line);
-      display: flex; justify-content: space-between; align-items: center;
-      font-size: 12px;
-      color: var(--muted);
-      letter-spacing: 0.04em;
-    }
-    .footer-bottom .city {
-      display: inline-flex; align-items: center; gap: 8px;
-    }
-    .footer-bottom .city::before {
-      content: "";
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--honey); box-shadow: 0 0 10px var(--honey);
-    }
-
-    /* ============== RESPONSIVE ============== */
-    @media (max-width: 1100px) {
-      .nav-links { gap: 24px; }
-    }
-    @media (max-width: 900px) {
-      .nav { grid-template-columns: 1fr auto; padding: 8px 14px; }
-      .nav-links { display: none; }
-      .nav-cta { padding: 8px 14px; font-size: 11.5px; }
-      .step-inner { grid-template-columns: 1fr; gap: 50px; }
-      section.step { padding: 100px 28px; }
-      .stepper { display: none; }
-      .hero { padding: 120px 28px 80px; }
-      .strip-head { padding: 0 28px; flex-direction: column; align-items: start; gap: 14px; }
-      .strip-track { padding: 10px 28px 30px; }
-      .closing { padding: 120px 28px 140px; }
-      footer { padding: 60px 28px 40px; }
-      .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
-      .footer-bottom { flex-direction: column; gap: 12px; align-items: start; }
-    }
-    @media (max-width: 540px) {
-      .footer-grid { grid-template-columns: 1fr; }
-      .scene-postcard { aspect-ratio: 5 / 4; }
-      .postcard-back { grid-template-columns: 1fr; }
-      .postcard-back .left { border-right: none; border-bottom: 1.5px dashed rgba(43, 26, 14, 0.25); }
-    }
-  </style>
+  <link rel="stylesheet" href="css/styles.css" />
 </head>
-<body>
-  <div class="progress"><div class="progress-bar" id="bar"></div></div>
 
+<body>
+  <!-- ============ PROGRESS BAR ============ -->
+  <div class="progress">
+    <div class="progress-bar" id="bar"></div>
+  </div>
+
+  <!-- ============ NAVBAR ============ -->
   <nav class="nav">
-    <a href="#top" class="brand">
-      <img src="archivos/LUMINA_LOGO.png" alt="Lúmina" />
-      <span>lúmina</span>
+    <a href="#inicio" class="brand" aria-label="Lúmina · inicio">
+      <img src="img/logo/lumina-logo.png" alt="" role="presentation" />
+      <span class="wordmark">LÚMINA</span>
     </a>
     <div class="nav-links">
-      <a href="#descubre">Explorar</a>
-      <a href="#vive">Comunidad</a>
+      <a href="#inicio">Inicio</a>
+      <a href="#descubre">Descubre</a>
       <a href="#lugares">Lugares</a>
+      <a href="#comunidad">Comunidad</a>
     </div>
-    <a href="#unete" class="nav-cta"><span class="spark">✦</span> Únete a Lúmina</a>
+    <a href="#" class="nav-cta" data-open-join><span class="spark" aria-hidden="true">✦</span> Únete</a>
+    <button class="nav-burger" id="nav-burger" aria-label="Abrir menú" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
 
-  <aside class="stepper" id="stepper">
-    <a href="#descubre"><span class="pill"></span> Descubre</a>
-    <a href="#vive"><span class="pill"></span> Vive</a>
-    <a href="#registra"><span class="pill"></span> Registra</a>
-    <a href="#comparte"><span class="pill"></span> Comparte</a>
+  <!-- ============ STEPPER ============ -->
+  <aside class="stepper" id="stepper" aria-label="Navegación de la página">
+    <a href="#inicio"><span class="dot"></span><span class="lbl">Inicio</span></a>
+    <a href="#descubre"><span class="dot"></span><span class="lbl">Descubre</span></a>
+    <a href="#lugares"><span class="dot"></span><span class="lbl">Lugares</span></a>
+    <a href="#postal"><span class="dot"></span><span class="lbl">Postal</span></a>
+    <a href="#mapa"><span class="dot"></span><span class="lbl">Mapa</span></a>
+    <a href="#comunidad"><span class="dot"></span><span class="lbl">Comunidad</span></a>
   </aside>
 
-  <!-- ============ HERO / BIENVENIDA ============ -->
-  <section class="hero" id="top">
+  <!-- ============ HERO · La ciudad ============ -->
+  <section class="hero" id="inicio">
     <div class="hero-bg"></div>
-    <div class="hero-grain"></div>
+    <div class="hero-grain" aria-hidden="true"></div>
+    <canvas class="hero-fireflies" id="fireflies" aria-hidden="true"></canvas>
     <div class="hero-inner">
-      <div class="eyebrow-row">
-        <span class="firefly"></span>
-        Bienvenida · Medellín se enciende
-      </div>
-      <h1>
-        Hay una ciudad entera<br/>
-        <em>esperando que la descubras.</em>
+      <h1 class="hero-title">
+        <em class="city">Medellín,</em>
+        una ciudad
+        <em class="ital">esperando que la descubras.</em>
       </h1>
-      <p class="lede">
-        Detrás de cada puerta hay alguien con un sueño que los algoritmos nunca te van a mostrar.
-        Una panadería con receta de abuela, un bar de barrio, un café atendido por su dueño.
+      <p class="hero-sub">
+        Cada esquina guarda un dueño, una receta o una historia que solo se revela cuando la buscas.
       </p>
-      <p class="lede">
-        <strong>LÚMINA nació para que nada de eso se pierda</strong>, y para que cada lugar que encuentres siga vivo gracias a ti.
-      </p>
-      <div class="signature">
-        Descubre. <span>·</span> Vive. <span>·</span> Registra. <span>·</span> Comparte.
-      </div>
-      <a href="#lugares" class="hero-cta">
+      <a href="#descubre" class="hero-cta">
         Esta es tu Medellín
-        <span class="arrow">→</span>
+        <span class="arrow" aria-hidden="true">→</span>
+      </a>
+      <div class="hero-scroll" aria-hidden="true">
+        <span>Desplázate · la ciudad responde</span>
+        <span class="line"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ El lugar · silueta de Medellín ============ -->
+  <section class="step" id="descubre">
+    <div class="step-inner">
+      <div class="step-text">
+        <h2>
+          Medellín,
+          <em>una ciudad que se ve cuando la iluminas.</em>
+        </h2>
+        <p>Cafés que abren cuando llueve, panaderías con recetas heredadas y rincones que no aparecen en los mapas
+          turísticos. Una ciudad que respira detrás de la postal, esperando que la enciendas.</p>
+      </div>
+      <div class="scene-iluminar" id="scene-iluminar">
+        <svg class="scene-bg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+          <defs>
+            <linearGradient id="bgSky" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#080603"/>
+              <stop offset="50%" stop-color="#140c08"/>
+              <stop offset="100%" stop-color="#241710"/>
+            </linearGradient>
+            <linearGradient id="bgMtBack" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#3a2e22"/>
+              <stop offset="100%" stop-color="#1a1208"/>
+            </linearGradient>
+            <linearGradient id="bgMtFront" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#251a10"/>
+              <stop offset="100%" stop-color="#0e0805"/>
+            </linearGradient>
+            <radialGradient id="bgHorizon" cx="50%" cy="95%" r="75%">
+              <stop offset="0%" stop-color="rgba(255, 140, 66, 0.22)"/>
+              <stop offset="45%" stop-color="rgba(255, 140, 66, 0.07)"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </radialGradient>
+          </defs>
+          <rect x="0" y="0" width="1600" height="900" fill="url(#bgSky)"/>
+          <rect x="0" y="350" width="1600" height="550" fill="url(#bgHorizon)"/>
+          <g fill="#faf6f0">
+            <circle cx="80"   cy="70"  r="1.0" opacity="0.75"/>
+            <circle cx="180"  cy="50"  r="0.8" opacity="0.6"/>
+            <circle cx="260"  cy="110" r="1.1" opacity="0.85"/>
+            <circle cx="360"  cy="40"  r="0.7" opacity="0.7"/>
+            <circle cx="470"  cy="95"  r="1.0" opacity="0.8"/>
+            <circle cx="560"  cy="55"  r="0.7" opacity="0.55" fill="#ffc266"/>
+            <circle cx="660"  cy="120" r="1.2" opacity="0.85"/>
+            <circle cx="760"  cy="65"  r="0.9" opacity="0.65"/>
+            <circle cx="860"  cy="100" r="1.0" opacity="0.75"/>
+            <circle cx="950"  cy="40"  r="0.7" opacity="0.6" fill="#ffc266"/>
+            <circle cx="1050" cy="90"  r="1.0" opacity="0.8"/>
+            <circle cx="1150" cy="55"  r="0.8" opacity="0.65"/>
+            <circle cx="1240" cy="110" r="1.1" opacity="0.85"/>
+            <circle cx="1340" cy="60"  r="0.8" opacity="0.7"/>
+            <circle cx="1450" cy="95"  r="0.9" opacity="0.75"/>
+            <circle cx="1540" cy="50"  r="0.7" opacity="0.6"/>
+            <circle cx="420"  cy="170" r="0.6" opacity="0.5"/>
+            <circle cx="800"  cy="180" r="0.6" opacity="0.45"/>
+            <circle cx="1180" cy="160" r="0.6" opacity="0.5"/>
+          </g>
+          <path d="M0,560 L120,475 L230,520 L360,440 L490,490 L620,430 L760,495 L900,440 L1050,500 L1200,440 L1340,495 L1480,455 L1600,485 L1600,720 L0,720 Z"
+                fill="url(#bgMtBack)" opacity="0.6"/>
+          <path d="M0,640 L110,565 L240,610 L370,545 L500,595 L650,530 L790,590 L930,540 L1080,595 L1220,540 L1380,585 L1500,555 L1600,585 L1600,760 L0,760 Z"
+                fill="url(#bgMtFront)" opacity="0.85"/>
+          <g fill="#040201">
+            <rect x="0"    y="720" width="1600" height="180"/>
+            <rect x="60"   y="680" width="38" height="40"/>
+            <rect x="110"  y="650" width="46" height="70"/>
+            <rect x="170"  y="690" width="34" height="30"/>
+            <rect x="220"  y="640" width="42" height="80"/>
+            <rect x="278"  y="615" width="34" height="105"/>
+            <rect x="320"  y="660" width="40" height="60"/>
+            <rect x="370"  y="630" width="38" height="90"/>
+            <rect x="418"  y="600" width="46" height="120"/>
+            <rect x="474"  y="640" width="34" height="80"/>
+            <rect x="520"  y="610" width="50" height="110"/>
+            <rect x="580"  y="660" width="36" height="60"/>
+            <rect x="630"  y="580" width="42" height="140"/>
+            <rect x="684"  y="635" width="38" height="85"/>
+            <rect x="734"  y="600" width="46" height="120"/>
+            <rect x="790"  y="540" width="34" height="180"/>
+            <rect x="836"  y="620" width="44" height="100"/>
+            <rect x="890"  y="660" width="38" height="60"/>
+            <rect x="940"  y="610" width="50" height="110"/>
+            <rect x="1000" y="640" width="38" height="80"/>
+            <rect x="1050" y="580" width="46" height="140"/>
+            <rect x="1108" y="620" width="34" height="100"/>
+            <rect x="1152" y="660" width="42" height="60"/>
+            <rect x="1204" y="630" width="40" height="90"/>
+            <rect x="1254" y="600" width="48" height="120"/>
+            <rect x="1312" y="650" width="34" height="70"/>
+            <rect x="1356" y="620" width="44" height="100"/>
+            <rect x="1410" y="660" width="38" height="60"/>
+            <rect x="1458" y="630" width="44" height="90"/>
+            <rect x="1512" y="660" width="38" height="60"/>
+          </g>
+          <g fill="#ffc266">
+            <rect x="72"   y="700" width="2" height="2" opacity="0.7"/>
+            <rect x="82"   y="700" width="2" height="2" opacity="0.6"/>
+            <rect x="122"  y="665" width="2" height="2" opacity="0.85"/>
+            <rect x="135"  y="685" width="2" height="2" opacity="0.7"/>
+            <rect x="148"  y="700" width="2" height="2" opacity="0.6"/>
+            <rect x="182"  y="700" width="2" height="2" opacity="0.55"/>
+            <rect x="232"  y="660" width="2" height="2" opacity="0.7"/>
+            <rect x="246"  y="685" width="2" height="2" opacity="0.85"/>
+            <rect x="290"  y="635" width="2" height="2" opacity="0.7"/>
+            <rect x="298"  y="680" width="2" height="2" opacity="0.6"/>
+            <rect x="332"  y="675" width="2" height="2" opacity="0.75"/>
+            <rect x="346"  y="700" width="2" height="2" opacity="0.65"/>
+            <rect x="382"  y="650" width="2" height="2" opacity="0.8"/>
+            <rect x="394"  y="685" width="2" height="2" opacity="0.65"/>
+            <rect x="430"  y="630" width="2" height="2" opacity="0.85"/>
+            <rect x="442"  y="660" width="2" height="2" opacity="0.7"/>
+            <rect x="450"  y="695" width="2" height="2" opacity="0.6"/>
+            <rect x="486"  y="660" width="2" height="2" opacity="0.7"/>
+            <rect x="496"  y="690" width="2" height="2" opacity="0.55"/>
+            <rect x="532"  y="635" width="2" height="2" opacity="0.85"/>
+            <rect x="548"  y="670" width="2" height="2" opacity="0.7"/>
+            <rect x="558"  y="700" width="2" height="2" opacity="0.6"/>
+            <rect x="592"  y="690" width="2" height="2" opacity="0.65"/>
+            <rect x="640"  y="605" width="2" height="2" opacity="0.85"/>
+            <rect x="654"  y="640" width="2" height="2" opacity="0.7"/>
+            <rect x="664"  y="685" width="2" height="2" opacity="0.6"/>
+            <rect x="694"  y="660" width="2" height="2" opacity="0.65"/>
+            <rect x="708"  y="700" width="2" height="2" opacity="0.55"/>
+            <rect x="744"  y="625" width="2" height="2" opacity="0.85"/>
+            <rect x="758"  y="665" width="2" height="2" opacity="0.7"/>
+            <rect x="768"  y="700" width="2" height="2" opacity="0.6"/>
+            <rect x="800"  y="565" width="2" height="2" opacity="0.85"/>
+            <rect x="810"  y="605" width="2" height="2" opacity="0.75"/>
+            <rect x="800"  y="650" width="2" height="2" opacity="0.65"/>
+            <rect x="810"  y="690" width="2" height="2" opacity="0.55"/>
+            <rect x="846"  y="645" width="2" height="2" opacity="0.75"/>
+            <rect x="858"  y="680" width="2" height="2" opacity="0.6"/>
+            <rect x="900"  y="675" width="2" height="2" opacity="0.7"/>
+            <rect x="912"  y="700" width="2" height="2" opacity="0.6"/>
+            <rect x="950"  y="635" width="2" height="2" opacity="0.85"/>
+            <rect x="966"  y="670" width="2" height="2" opacity="0.7"/>
+            <rect x="976"  y="700" width="2" height="2" opacity="0.55"/>
+            <rect x="1010" y="660" width="2" height="2" opacity="0.7"/>
+            <rect x="1022" y="690" width="2" height="2" opacity="0.6"/>
+            <rect x="1060" y="605" width="2" height="2" opacity="0.85"/>
+            <rect x="1076" y="640" width="2" height="2" opacity="0.7"/>
+            <rect x="1084" y="685" width="2" height="2" opacity="0.6"/>
+            <rect x="1118" y="650" width="2" height="2" opacity="0.65"/>
+            <rect x="1128" y="700" width="2" height="2" opacity="0.55"/>
+            <rect x="1162" y="685" width="2" height="2" opacity="0.7"/>
+            <rect x="1180" y="700" width="2" height="2" opacity="0.6"/>
+            <rect x="1214" y="655" width="2" height="2" opacity="0.75"/>
+            <rect x="1226" y="690" width="2" height="2" opacity="0.65"/>
+            <rect x="1264" y="625" width="2" height="2" opacity="0.85"/>
+            <rect x="1278" y="660" width="2" height="2" opacity="0.7"/>
+            <rect x="1290" y="700" width="2" height="2" opacity="0.6"/>
+            <rect x="1322" y="675" width="2" height="2" opacity="0.7"/>
+            <rect x="1366" y="645" width="2" height="2" opacity="0.85"/>
+            <rect x="1382" y="685" width="2" height="2" opacity="0.7"/>
+            <rect x="1420" y="685" width="2" height="2" opacity="0.6"/>
+            <rect x="1432" y="700" width="2" height="2" opacity="0.55"/>
+            <rect x="1470" y="655" width="2" height="2" opacity="0.75"/>
+            <rect x="1486" y="690" width="2" height="2" opacity="0.65"/>
+            <rect x="1522" y="685" width="2" height="2" opacity="0.7"/>
+          </g>
+        </svg>
+
+        <div class="luciernagas">
+          <button type="button" class="luc" data-name="Cerro El Volador" aria-label="Cerro El Volador" style="left:12%;top:22%"></button>
+          <button type="button" class="luc" data-name="Jardín Botánico" aria-label="Jardín Botánico" style="left:28%;top:32%"></button>
+          <button type="button" class="luc" data-name="Pueblito Paisa" aria-label="Pueblito Paisa" style="left:18%;top:50%"></button>
+          <button type="button" class="luc" data-name="Plaza Botero" aria-label="Plaza Botero" style="left:42%;top:28%"></button>
+          <button type="button" class="luc" data-name="Cerro Nutibara" aria-label="Cerro Nutibara" style="left:36%;top:58%"></button>
+          <button type="button" class="luc" data-name="Centro Moravia" aria-label="Centro Moravia" style="left:54%;top:38%"></button>
+          <button type="button" class="luc" data-name="Parque Lleras" aria-label="Parque Lleras" style="left:62%;top:64%"></button>
+          <button type="button" class="luc" data-name="Comuna 13" aria-label="Comuna 13" style="left:8%;top:68%"></button>
+          <button type="button" class="luc" data-name="Provenza" aria-label="Provenza" style="left:72%;top:48%"></button>
+          <button type="button" class="luc" data-name="Pies Descalzos" aria-label="Pies Descalzos" style="left:48%;top:78%"></button>
+          <button type="button" class="luc" data-name="Atanasio Girardot" aria-label="Atanasio Girardot" style="left:86%;top:70%"></button>
+          <button type="button" class="luc" data-name="Mercado del Río" aria-label="Mercado del Río" style="left:80%;top:26%"></button>
+        </div>
+
+        <canvas class="scene-veil" id="scene-veil" aria-hidden="true"></canvas>
+
+        <div class="luc-tooltip" id="luc-tooltip" role="status" aria-live="polite"></div>
+
+        <div class="luc-counter" aria-live="polite">
+          <span class="luc-counter-spark" aria-hidden="true">✦</span>
+          luciérnagas guardadas · <span id="luc-count">0</span>
+        </div>
+
+        <div class="scene-hint" id="scene-hint">Muévete. Apunta la luz. Descubre.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Lugares que ya brillan ============ -->
+  <section class="lugares" id="lugares">
+    <header class="lugares-head">
+      <h2>Algunos de los <em>rincones</em> que ya brillan.</h2>
+      <p class="hint">Una muestra. Cuando empieces tu camino, se abrirán los demás.</p>
+    </header>
+
+    <div class="lugares-grid">
+      <article class="place-card" data-place="malaga" tabindex="0" aria-label="Salón Málaga — abrir galería">
+        <div class="stack">
+          <picture class="stack-main">
+            <source srcset="img/lugares/malaga.webp" type="image/webp" />
+            <img src="img/lugares/malaga.jpg" alt="Salón Málaga" loading="lazy" width="800" height="1000" />
+          </picture>
+          <span class="photo-pill">✦ 5 fotos</span>
+        </div>
+        <div class="place-info">
+          <div class="place-meta">La Candelaria · Centro</div>
+          <h3 class="place-name">Salón Málaga</h3>
+          <p class="place-desc">Vinilos, tango y un siglo de tertulia.</p>
+        </div>
+      </article>
+
+      <article class="place-card" data-place="claustro" tabindex="0" aria-label="El Bohemio de Clausura — abrir galería">
+        <div class="stack">
+          <picture class="stack-main">
+            <source srcset="img/lugares/claustro.webp" type="image/webp" />
+            <img src="img/lugares/claustro.jpg" alt="El Bohemio de Clausura" loading="lazy" width="800"
+              height="1000" />
+          </picture>
+          <span class="photo-pill">✦ 2 fotos</span>
+        </div>
+        <div class="place-info">
+          <div class="place-meta">La Candelaria · Centro</div>
+          <h3 class="place-name">El Bohemio de Clausura</h3>
+          <p class="place-desc">Centro cultural en un convento del siglo XIX.</p>
+        </div>
+      </article>
+
+      <article class="place-card" data-place="epico" tabindex="0" aria-label="Épico — abrir galería">
+        <div class="stack">
+          <picture class="stack-main">
+            <source srcset="img/lugares/epico.webp" type="image/webp" />
+            <img src="img/lugares/epico.jpg" alt="Épico" loading="lazy" width="800" height="1000" />
+          </picture>
+          <span class="photo-pill">✦ 3 fotos</span>
+        </div>
+        <div class="place-info">
+          <div class="place-meta">La Candelaria · Centro</div>
+          <h3 class="place-name">Épico</h3>
+          <p class="place-desc">Cocina mestiza y bar de barrio.</p>
+        </div>
+      </article>
+
+      <article class="place-card" data-place="terracota" tabindex="0" aria-label="Terracota — abrir galería">
+        <div class="stack">
+          <picture class="stack-main">
+            <img src="img/lugares/terracota.jpg" alt="Panadería Terracota" loading="lazy"
+              width="800" height="1000" />
+          </picture>
+          <span class="photo-pill">✦ 7 fotos</span>
+        </div>
+        <div class="place-info">
+          <div class="place-meta">Laureles · Estadio</div>
+          <h3 class="place-name">Terracota</h3>
+          <p class="place-desc">Panadería de barrio. Pan recién horneado y mesa lenta.</p>
+        </div>
+      </article>
+    </div>
+
+    <div class="section-cta-row">
+      <a href="#todos-lugares" class="section-cta">
+        Ver todos los lugares
+        <span class="arrow" aria-hidden="true">→</span>
       </a>
     </div>
-    <div class="hero-scroll">
-      <span>Desliza</span>
-      <span class="line"></span>
-    </div>
   </section>
 
-  <!-- ============ STRIP / LUGARES PREVIEW ============ -->
-  <section class="strip" id="lugares">
-    <div class="strip-head">
-      <div>
-        <span class="num">— En la ciudad ahora</span>
-        <h2>Algunos de los <em>lugares</em> que ya brillan.</h2>
-      </div>
-      <p class="hint">Una probadita. La lista completa abre cuando empiezas tu camino.</p>
-    </div>
-    <div class="strip-track">
-      <article class="strip-card">
-        <div class="img" style="background-image: url('archivos/Fotos/3.jpeg');"></div>
-        <div class="label">
-          <div class="name">Salón Versalles</div>
-          <div class="place">Centro · Café histórico</div>
-        </div>
-      </article>
-      <article class="strip-card">
-        <div class="img" style="background-image: url('archivos/Fotos/4.jpeg');"></div>
-        <div class="label">
-          <div class="name">Salón Málaga</div>
-          <div class="place">Centro · Música de colección</div>
-        </div>
-      </article>
-      <article class="strip-card">
-        <div class="img" style="background-image: url('archivos/Fotos/7.jpeg');"></div>
-        <div class="label">
-          <div class="name">Café de los abuelos</div>
-          <div class="place">Centro · Tertulia y memoria</div>
-        </div>
-      </article>
-      <article class="strip-card">
-        <div class="img" style="background-image: url('archivos/Fotos/10.jpg');"></div>
-        <div class="label">
-          <div class="name">Burguer del barrio</div>
-          <div class="place">Laureles · Cocina cercana</div>
-        </div>
-      </article>
-    </div>
-  </section>
-
-  <!-- ============ STEP 1: DESCUBRE ============ -->
-  <section class="step" id="descubre">
-    <div class="stars" aria-hidden="true"></div>
-    <div class="skyline" aria-hidden="true">
-      <svg viewBox="0 0 1600 500" preserveAspectRatio="none">
-        <defs>
-          <linearGradient id="ridgeGrad" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stop-color="#1f1208"/>
-            <stop offset="100%" stop-color="#0a0604"/>
-          </linearGradient>
-          <radialGradient id="skyGlow" cx="50%" cy="100%" r="80%">
-            <stop offset="0%" stop-color="rgba(255,174,107,0.35)"/>
-            <stop offset="60%" stop-color="rgba(255,174,107,0.05)"/>
-            <stop offset="100%" stop-color="transparent"/>
-          </radialGradient>
-        </defs>
-        <!-- glow del valle -->
-        <rect x="0" y="0" width="1600" height="500" fill="url(#skyGlow)"/>
-        <!-- montañas del fondo -->
-        <path d="M0,260 L80,210 L160,240 L240,180 L340,230 L420,200 L520,250 L620,210 L740,240 L860,200 L980,250 L1100,210 L1240,240 L1360,200 L1480,250 L1600,220 L1600,500 L0,500 Z"
-              fill="#0d0805" opacity="0.85"/>
-        <!-- silueta de ciudad -->
-        <path d="M0,360
-                 L40,360 L40,320 L70,320 L70,340 L100,340 L100,300 L130,300 L130,330 L160,330 L160,310 L190,310 L190,290 L220,290 L220,330 L250,330 L250,310 L290,310 L290,280 L320,280 L320,300 L350,300 L350,260 L380,260 L380,300 L410,300 L410,330 L440,330 L440,310 L470,310 L470,270 L500,270 L500,290 L530,290 L530,260 L560,260 L560,240 L590,240 L590,290 L620,290 L620,310 L660,310 L660,280 L690,280 L690,300 L720,300 L720,270 L750,270 L750,250 L780,250 L780,300 L810,300 L810,330 L840,330 L840,300 L870,300 L870,260 L900,260 L900,290 L930,290 L930,310 L960,310 L960,280 L990,280 L990,300 L1020,300 L1020,330 L1050,330 L1050,300 L1080,300 L1080,260 L1110,260 L1110,290 L1140,290 L1140,310 L1170,310 L1170,290 L1200,290 L1200,330 L1230,330 L1230,310 L1260,310 L1260,280 L1290,280 L1290,300 L1320,300 L1320,330 L1360,330 L1360,310 L1390,310 L1390,280 L1420,280 L1420,260 L1450,260 L1450,300 L1480,300 L1480,330 L1520,330 L1520,310 L1560,310 L1560,340 L1600,340 L1600,500 L0,500 Z"
-              fill="url(#ridgeGrad)"/>
-        <!-- ventanas iluminadas -->
-        <g fill="#ffc266" opacity="0.85">
-          <rect x="50"  y="335" width="3" height="3"/>
-          <rect x="80"  y="328" width="3" height="3"/>
-          <rect x="115" y="312" width="3" height="3"/>
-          <rect x="140" y="320" width="3" height="3"/>
-          <rect x="170" y="298" width="3" height="3"/>
-          <rect x="205" y="305" width="3" height="3"/>
-          <rect x="232" y="318" width="3" height="3"/>
-          <rect x="270" y="295" width="3" height="3"/>
-          <rect x="305" y="288" width="3" height="3"/>
-          <rect x="338" y="272" width="3" height="3"/>
-          <rect x="365" y="280" width="3" height="3"/>
-          <rect x="395" y="312" width="3" height="3"/>
-          <rect x="425" y="320" width="3" height="3"/>
-          <rect x="455" y="285" width="3" height="3"/>
-          <rect x="485" y="278" width="3" height="3"/>
-          <rect x="515" y="270" width="3" height="3"/>
-          <rect x="548" y="252" width="3" height="3"/>
-          <rect x="578" y="262" width="3" height="3"/>
-          <rect x="608" y="295" width="3" height="3"/>
-          <rect x="640" y="298" width="3" height="3"/>
-          <rect x="678" y="290" width="3" height="3"/>
-          <rect x="708" y="282" width="3" height="3"/>
-          <rect x="738" y="262" width="3" height="3"/>
-          <rect x="765" y="280" width="3" height="3"/>
-          <rect x="795" y="312" width="3" height="3"/>
-          <rect x="828" y="318" width="3" height="3"/>
-          <rect x="858" y="278" width="3" height="3"/>
-          <rect x="888" y="270" width="3" height="3"/>
-          <rect x="918" y="298" width="3" height="3"/>
-          <rect x="948" y="298" width="3" height="3"/>
-          <rect x="978" y="290" width="3" height="3"/>
-          <rect x="1008" y="312" width="3" height="3"/>
-          <rect x="1040" y="318" width="3" height="3"/>
-          <rect x="1068" y="282" width="3" height="3"/>
-          <rect x="1098" y="272" width="3" height="3"/>
-          <rect x="1128" y="298" width="3" height="3"/>
-          <rect x="1158" y="298" width="3" height="3"/>
-          <rect x="1188" y="312" width="3" height="3"/>
-          <rect x="1218" y="318" width="3" height="3"/>
-          <rect x="1248" y="290" width="3" height="3"/>
-          <rect x="1278" y="288" width="3" height="3"/>
-          <rect x="1308" y="312" width="3" height="3"/>
-          <rect x="1348" y="318" width="3" height="3"/>
-          <rect x="1378" y="298" width="3" height="3"/>
-          <rect x="1408" y="270" width="3" height="3"/>
-          <rect x="1438" y="278" width="3" height="3"/>
-          <rect x="1468" y="312" width="3" height="3"/>
-          <rect x="1508" y="318" width="3" height="3"/>
-          <rect x="1545" y="320" width="3" height="3"/>
-        </g>
-      </svg>
-    </div>
+  <!-- ============ Memoria · postal flip ============ -->
+  <section class="step memoria" id="postal">
     <div class="step-inner">
       <div class="step-text">
-        <span class="num">— Paso 01 / 04</span>
-        <h2>Descubre<br/><em>lo que está apagado.</em></h2>
-        <p>Cafés, talleres, bares y miradores que las redes nunca te van a mostrar.</p>
-        <p>Cada punto en el mapa es un negocio local esperando que llegues.</p>
-      </div>
-      <div class="scene-discover">
-        <canvas id="discover-canvas"></canvas>
-      </div>
-    </div>
-  </section>
+        <h2>
+          Guarda tu visita
+          <em>antes de que se te olvide.</em>
+        </h2>
+        <p>Cada visita se convierte en una postal: una foto, una emoción, las palabras que te quedaron. Gírala cuando
+          quieras volver.</p>
 
-  <!-- ============ STEP 2: VIVE ============ -->
-  <section class="step" id="vive">
-    <div class="step-inner">
-      <div class="scene-vive" style="order: -1">
-        <div class="glass-card c3">
-          <div class="img"></div>
-          <div class="meta">
-            <div class="text">
-              <div class="name">Terraza Provenza</div>
-              <div class="place">El Poblado · Encuentro</div>
-            </div>
-            <span class="pin"></span>
-          </div>
-        </div>
-        <div class="glass-card c2">
-          <div class="img"></div>
-          <div class="meta">
-            <div class="text">
-              <div class="name">Épico Cocina Mestiza</div>
-              <div class="place">Centro · Bar &amp; tapeo</div>
-            </div>
-            <span class="pin"></span>
-          </div>
-        </div>
-        <div class="glass-card c1">
-          <div class="img"></div>
-          <div class="meta">
-            <div class="text">
-              <div class="name">Bar de la esquina</div>
-              <div class="place">Provenza · Local</div>
-            </div>
-            <span class="pin"></span>
-          </div>
+        <div class="postal-actions">
+          <button type="button" class="section-cta" data-open-postal>
+            Agregar postal
+            <span class="arrow" aria-hidden="true">+</span>
+          </button>
+          <a href="#todas-postales" class="section-ghost">
+            Ver todas las postales
+            <span class="arrow" aria-hidden="true">→</span>
+          </a>
         </div>
       </div>
-      <div class="step-text">
-        <span class="num">— Paso 02 / 04</span>
-        <h2>Vive<br/><em>la experiencia.</em></h2>
-        <p>Llegas, te sorprendes, conversas con el dueño, descubres que la receta es de la abuela.</p>
-        <p>Eso es lo que vinimos a buscar.</p>
-      </div>
-    </div>
-  </section>
 
-  <!-- ============ STEP 3: REGISTRA ============ -->
-  <section class="step" id="registra">
-    <div class="step-inner">
-      <div class="step-text">
-        <span class="num">— Paso 03 / 04</span>
-        <h2>Registra<br/><em>tu memoria.</em></h2>
-        <p>Cada visita se convierte en una postal: una foto, una emoción, las palabras que se te quedaron.</p>
-        <p>Dale la vuelta y léela cuando quieras volver.</p>
-      </div>
       <div class="scene-postcard">
-        <div class="tape"></div>
-        <div class="postcard" id="postcard">
-          <!-- frente -->
+        <div class="tape" aria-hidden="true"></div>
+        <div class="postcard" id="postcard" tabindex="0" role="button" aria-label="Girar la postal">
           <div class="postcard-face postcard-front">
-            <div class="corner"><span>Lúmina<br/>Medellín</span></div>
+            <div class="corner"><span>Lúmina<br />Medellín</span></div>
             <div class="place-tag">
               <div class="label">Memoria registrada</div>
-              <div class="name">Burguer del barrio</div>
+              <div class="name">Salón Málaga</div>
             </div>
             <span class="flip-hint">Toca para girar →</span>
           </div>
-          <!-- reverso -->
           <div class="postcard-face postcard-back">
             <div class="left">
               <div class="head">
                 <span class="date">Sábado 15 · Marzo</span>
-                <span class="from">Desde Laureles</span>
+                <span class="from">Desde La Candelaria</span>
               </div>
-              <div class="pname">Burguer del barrio</div>
+              <div class="pname">Salón Málaga</div>
               <p class="entry">
-                Llegué buscando el lugar más vacío de la cuadra y resulté en la mesa más larga.
-                Las papas crocantes, la salsa de la casa, y el dueño contando que la receta es de su mamá.
-                Esto no me lo iba a mostrar ningún algoritmo.
+                Llegué un martes lluvioso. Pedí un tinto. El señor de la mesa de al lado me contó que ahí firmaron, en
+                1978, un divorcio, un negocio y una declaración de amor. Todo en la misma tarde. El café sabía a museo y
+                a conversación lenta.
               </p>
               <div class="stamps">
-                <span class="stamp">Acogedor</span>
-                <span class="stamp">Local</span>
+                <span class="stamp">Tertulia</span>
+                <span class="stamp">Memoria</span>
                 <span class="stamp">Volveré</span>
               </div>
             </div>
             <div class="right">
-              <div class="stamp-square"><div class="inner"></div></div>
-              <div class="lines">
-                <div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
+              <div class="stamp-square">
+                <div class="inner"></div>
               </div>
-              <div class="destination">
-                Para
-                <strong>Mi yo del próximo mes</strong>
+              <div class="address">
+                <span class="address-label">Para</span>
+                <div class="address-line">Mi yo del próximo mes</div>
+                <div class="address-line">cuando vuelvas a buscar</div>
+                <div class="address-line">una tarde de tertulia</div>
+              </div>
+              <div class="coords">
+                6.2465°N · 75.5697°W<br />
+                La Candelaria
               </div>
             </div>
           </div>
@@ -1375,231 +428,351 @@
     </div>
   </section>
 
-  <!-- ============ STEP 4: COMPARTE ============ -->
-  <section class="step" id="comparte">
+  <!-- ============ Tu mapa · constelación ============ -->
+  <section class="step mapa" id="mapa">
     <div class="step-inner">
       <div class="step-text">
-        <span class="num">— Paso 04 / 04</span>
-        <h2>Comparte<br/><em>tu constelación.</em></h2>
-        <p>Cada lugar que registras se convierte en una estrella en tu mapa personal.</p>
-        <p>Pasa el cursor: tu constelación se ilumina como con una linterna.</p>
+        <h2>
+          Cada lugar que iluminas
+          <em>se queda en tu cielo.</em>
+        </h2>
+        <p>Tu constelación crece con cada postal. Cada estrella guarda la historia, las redes y el camino hasta el
+          lugar.</p>
       </div>
+
       <div class="scene-share" id="scene-share">
-        <svg viewBox="0 0 400 400">
-          <line class="const-line" x1="80"  y1="120" x2="180" y2="80"/>
-          <line class="const-line" x1="180" y1="80"  x2="280" y2="140"/>
-          <line class="const-line" x1="280" y1="140" x2="320" y2="240"/>
-          <line class="const-line" x1="320" y1="240" x2="220" y2="300"/>
-          <line class="const-line" x1="220" y1="300" x2="100" y2="280"/>
-          <line class="const-line" x1="100" y1="280" x2="80"  y2="120"/>
-          <line class="const-line" x1="180" y1="80"  x2="220" y2="200"/>
-          <line class="const-line" x1="220" y1="200" x2="220" y2="300"/>
-          <circle class="const-node" cx="80"  cy="120" r="5"/>
-          <circle class="const-node" cx="180" cy="80"  r="6"/>
-          <circle class="const-node" cx="280" cy="140" r="5"/>
-          <circle class="const-node" cx="320" cy="240" r="5"/>
-          <circle class="const-node" cx="220" cy="300" r="6"/>
-          <circle class="const-node" cx="100" cy="280" r="5"/>
-          <circle class="const-node" cx="220" cy="200" r="7"/>
-          <text class="const-label" x="195" y="70">Salón Versalles</text>
-          <text class="const-label" x="295" y="135">Épico</text>
-          <text class="const-label" x="235" y="195">Provenza</text>
-          <text class="const-label" x="60"  y="115">Salón Málaga</text>
-          <text class="const-label" x="115" y="295">Burguer barrio</text>
-          <text class="const-label" x="335" y="245">Mirador 13</text>
+        <svg viewBox="0 0 400 400" aria-label="Constelación de lugares">
+          <line class="const-line" x1="80" y1="120" x2="220" y2="90" />
+          <line class="const-line" x1="220" y1="90" x2="320" y2="150" />
+          <line class="const-line" x1="320" y1="150" x2="220" y2="280" />
+          <line class="const-line" x1="220" y1="280" x2="80" y2="120" />
+          <line class="const-line" x1="220" y1="90" x2="220" y2="280" />
+
+          <g class="const-link" data-place="malaga" tabindex="0" role="button" aria-label="Abrir Salón Málaga">
+            <circle class="const-node real" cx="80" cy="120" r="6" />
+            <text class="const-label" x="60" y="108">Salón Málaga</text>
+          </g>
+
+          <g class="const-link" data-place="claustro" tabindex="0" role="button"
+            aria-label="Abrir El Bohemio de Clausura">
+            <circle class="const-node real" cx="220" cy="90" r="6" />
+            <text class="const-label" x="170" y="78">Bohemio de Clausura</text>
+          </g>
+
+          <g class="const-link" data-place="epico" tabindex="0" role="button" aria-label="Abrir Épico">
+            <circle class="const-node real" cx="320" cy="150" r="6" />
+            <text class="const-label" x="295" y="140">Épico</text>
+          </g>
+
+          <g class="const-link" data-place="terracota" tabindex="0" role="button" aria-label="Abrir Terracota">
+            <circle class="const-node real" cx="220" cy="280" r="7" />
+            <text class="const-label" x="195" y="305">Terracota</text>
+          </g>
+
+          <g class="const-future">
+            <circle class="const-node" cx="120" cy="260" r="4" />
+            <text class="const-label" x="60" y="265">Próximamente</text>
+          </g>
+          <g class="const-future">
+            <circle class="const-node" cx="330" cy="290" r="4" />
+            <text class="const-label" x="265" y="305">Próximamente</text>
+          </g>
         </svg>
         <div class="const-mask"></div>
         <div class="torch"></div>
-        <div class="hint">Mueve el cursor · ilumina tu mapa</div>
       </div>
     </div>
   </section>
 
-  <!-- ============ CIERRE ============ -->
-  <section class="closing" id="unete">
-    <div class="closing-bg"></div>
+  <!-- ============ Cierre ============ -->
+  <section class="closing" id="comunidad">
+    <div class="closing-bg" aria-hidden="true"></div>
     <div class="closing-inner">
-      <div class="firefly"></div>
-      <h3>Tu Medellín ya no se va a repetir. <em>Empieza a encenderla.</em></h3>
+      <div class="firefly-big" aria-hidden="true"></div>
+      <h3>
+        Tu Medellín no se va a repetir.
+        <em>Empieza a encenderla.</em>
+      </h3>
       <p>
-        Cada lugar que descubras, cada postal que escribas, cada estrella que sumes a tu constelación
-        deja la ciudad un poco más viva para quien venga después de ti.
+        Cada lugar que descubras, cada postal que escribas y cada estrella que sumes a tu constelación deja la ciudad un
+        poco más viva para quien venga después de ti.
       </p>
       <div class="closing-actions">
         <a href="#lugares" class="closing-cta">
-          Esta es tu Medellín
-          <span class="arrow">→</span>
+          Explorar los rincones
+          <span class="arrow" aria-hidden="true">→</span>
         </a>
-        <a href="#" class="closing-ghost">Únete a Lúmina ✦</a>
+        <a href="#" class="closing-ghost" data-open-join>Únete a Lúmina <span class="spark"
+            aria-hidden="true">✦</span></a>
       </div>
     </div>
   </section>
 
-  <!-- ============ FOOTER ============ -->
-  <footer>
+  <!-- ============ SUBVIEW · Todos los lugares ============ -->
+  <main class="subview" id="todos-lugares" aria-hidden="true">
+    <div class="subview-inner">
+      <a href="#lugares" class="subview-back">
+        <span aria-hidden="true">←</span> Volver
+      </a>
+      <header class="subview-head">
+        <h2>Todos los <em>lugares</em></h2>
+        <p>Cada rincón con su historia, su gente y su forma de prender la noche.</p>
+      </header>
+      <div class="subview-grid" id="todos-lugares-grid"></div>
+    </div>
+  </main>
+
+  <!-- ============ SUBVIEW · Todas las postales ============ -->
+  <main class="subview" id="todas-postales" aria-hidden="true">
+    <div class="subview-inner">
+      <a href="#postal" class="subview-back">
+        <span aria-hidden="true">←</span> Volver
+      </a>
+      <header class="subview-head">
+        <h2>Lúmina en <em>postales</em></h2>
+        <p>Las memorias que la comunidad ha dejado escritas.</p>
+      </header>
+      <div class="postales-grid" id="postales-grid"></div>
+    </div>
+  </main>
+
+  <!-- ============ Footer ============ -->
+  <footer class="site-footer">
     <div class="footer-grid">
-      <div>
+      <div class="footer-brand-col">
         <div class="footer-brand">
-          <img src="archivos/LUMINA_LOGO.png" alt="Lúmina" />
-          <span class="name">lúmina</span>
+          <img src="img/logo/lumina-logo-mono-ivory.png" alt="" role="presentation" loading="lazy" />
+          <span class="footer-wordmark">lúmina</span>
         </div>
         <p class="footer-tag">
-          Una luciérnaga que te lleva a los rincones que la ciudad guarda en silencio.
-          Para que ningún lugar bonito se apague.
+          Una luciérnaga que te lleva a los rincones que la ciudad guarda en silencio. Para que ningún lugar bonito se
+          apague.
         </p>
       </div>
+
       <div class="footer-col">
         <h4>El camino</h4>
+        <a href="#inicio">Inicio</a>
         <a href="#descubre">Descubre</a>
-        <a href="#vive">Vive</a>
-        <a href="#registra">Registra</a>
-        <a href="#comparte">Comparte</a>
-      </div>
-      <div class="footer-col">
-        <h4>La luciérnaga</h4>
         <a href="#lugares">Lugares</a>
-        <a href="#vive">Comunidad</a>
-        <a href="#unete">Únete</a>
-        <a href="#unete">Detrás de la luz</a>
+        <a href="#postal">Postal</a>
+        <a href="#mapa">Mapa</a>
+        <a href="#comunidad">Comunidad</a>
       </div>
+
+      <div class="footer-col footer-social">
+        <h4>Síguenos</h4>
+        <div class="social-icons">
+          <a href="#" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+              stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="5" />
+              <circle cx="12" cy="12" r="4" />
+              <circle cx="17.5" cy="6.5" r="1" fill="currentColor" />
+            </svg>
+          </a>
+          <a href="#" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+              stroke-linejoin="round" aria-hidden="true">
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+            </svg>
+          </a>
+          <a href="#" aria-label="TikTok">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+              stroke-linejoin="round" aria-hidden="true">
+              <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
+            </svg>
+          </a>
+          <a href="#" aria-label="Pinterest">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+              stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M11 7c-2.2.3-3.6 2-3.6 4 0 1.2.5 2.1 1.4 2.3.2 0 .3 0 .3-.2l.1-.5c.1-.2 0-.3-.1-.4-.3-.4-.5-.9-.5-1.6 0-2 1.5-3.8 4-3.8 2.2 0 3.4 1.3 3.4 3.1 0 2.3-1 4.3-2.6 4.3-.9 0-1.5-.7-1.3-1.6.3-1.1.8-2.2.8-3 0-.7-.4-1.3-1.1-1.3-.9 0-1.6.9-1.6 2.1 0 .8.3 1.3.3 1.3l-1.1 4.6c-.3 1.4-.1 3 0 3.2.1.1.2.1.3 0 .1-.1 1.4-1.7 1.8-3.3l.7-2.6c.4.7 1.3 1.2 2.4 1.2 3.1 0 5.2-2.8 5.2-6.6 0-2.9-2.4-5.5-6.1-5.5z" fill="currentColor" stroke="none" />
+            </svg>
+          </a>
+        </div>
+      </div>
+
       <div class="footer-col">
-        <h4>Contacto</h4>
-        <a href="#">hola@lumina.co</a>
-        <a href="#">Instagram</a>
-        <a href="#">Para negocios</a>
+        <h4>Lo legal</h4>
+        <a href="#">Términos</a>
+        <a href="#">Privacidad</a>
+        <a href="#">Cookies</a>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 Lúmina · Todos los derechos reservados</span>
-      <span class="city">Encendiendo Medellín</span>
+      <span>LÚMINA · Hecho en Medellín · 2026</span>
     </div>
   </footer>
 
-  <script>
-    /* progress bar */
-    const bar = document.getElementById("bar");
-    document.addEventListener("scroll", () => {
-      const h = document.documentElement.scrollHeight - window.innerHeight;
-      const p = Math.min(100, (window.scrollY / h) * 100);
-      bar.style.width = p + "%";
-    });
+  <!-- ============ MODAL · Únete ============ -->
+  <div class="modal" id="join-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="join-title">
+    <div class="modal-card" role="document">
+      <button class="modal-close" id="join-close" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+      <div class="modal-body" id="join-body">
+        <h3 class="modal-title" id="join-title">Súmate a la luz</h3>
+        <p class="modal-sub">
+          Una carta mensual con rincones nuevos. Sin spam, palabra de luciérnaga.
+        </p>
+        <form id="join-form" novalidate>
+          <label class="field">
+            <span>¿Cómo te llamas?</span>
+            <input type="text" name="name" id="join-name" required autocomplete="given-name" />
+          </label>
+          <label class="field">
+            <span>Tu correo</span>
+            <input type="email" name="email" id="join-email" required autocomplete="email" />
+          </label>
+          <div class="field">
+            <span>¿Qué buscas esta noche?</span>
+            <div class="lum-select" id="join-mood-select">
+              <button type="button" class="lum-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+                <span class="lum-select-label placeholder">Elige una opción</span>
+                <svg class="lum-select-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </button>
+              <ul class="lum-select-panel" role="listbox" tabindex="-1" aria-label="Opciones">
+                <li role="option" data-value="tranquila">Tranquila</li>
+                <li role="option" data-value="con-gente">Con gente</li>
+                <li role="option" data-value="diferente">Diferente</li>
+                <li role="option" data-value="no-se">Todavía no sé</li>
+              </ul>
+              <input type="hidden" name="mood" id="join-mood" value="" required />
+            </div>
+          </div>
+          <button type="submit" class="modal-submit">
+            Enciende mi luciérnaga <span class="spark" aria-hidden="true">✦</span>
+          </button>
+          <button type="button" class="modal-cancel" id="join-cancel">Cerrar</button>
+        </form>
+      </div>
+    </div>
+  </div>
 
-    /* IntersectionObserver — toggle .in on each step */
-    const steps = document.querySelectorAll(".step");
-    const stepperLinks = document.querySelectorAll(".stepper a");
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) {
-          e.target.classList.add("in");
-          const id = e.target.id;
-          stepperLinks.forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#" + id));
-        }
-      });
-    }, { threshold: 0.45 });
-    steps.forEach((s) => io.observe(s));
+  <!-- ============ MODAL · Agregar postal ============ -->
+  <div class="modal" id="postal-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="postal-title">
+    <div class="modal-card" role="document">
+      <button class="modal-close" id="postal-close" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+      <div class="modal-body" id="postal-body">
+        <h3 class="modal-title" id="postal-title">Agregar tu postal</h3>
+        <p class="modal-sub">
+          Una memoria de la ciudad, escrita por ti. Se queda en tu navegador y, si quieres, la compartes.
+        </p>
+        <form id="postal-form" novalidate>
+          <label class="field">
+            <span>¿Cómo te llamas?</span>
+            <input type="text" name="name" id="postal-name" required autocomplete="given-name" />
+          </label>
+          <label class="field">
+            <span>Tu correo <em class="field-opt">(opcional)</em></span>
+            <input type="email" name="email" id="postal-email" autocomplete="email" />
+          </label>
+          <div class="field">
+            <span>¿Sobre qué lugar?</span>
+            <div class="lum-select" id="postal-place-select">
+              <button type="button" class="lum-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+                <span class="lum-select-label placeholder">Elige un lugar</span>
+                <svg class="lum-select-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </button>
+              <ul class="lum-select-panel" role="listbox" tabindex="-1" aria-label="Lugares">
+                <li role="option" data-value="malaga">Salón Málaga</li>
+                <li role="option" data-value="claustro">El Bohemio de Clausura</li>
+                <li role="option" data-value="epico">Épico</li>
+                <li role="option" data-value="terracota">Terracota</li>
+              </ul>
+              <input type="hidden" name="place" id="postal-place" value="" required />
+            </div>
+          </div>
+          <label class="field">
+            <span>Tu postal</span>
+            <textarea name="entry" id="postal-entry" rows="4" required
+              placeholder="¿Qué pasó esa noche? ¿Con quién? ¿Qué te quedó?"></textarea>
+          </label>
+          <label class="field">
+            <span>Sube tu foto de la noche <em class="field-opt">(opcional)</em></span>
+            <div class="file-upload-wrapper">
+              <input type="file" id="postal-file-input" accept="image/*" class="file-input-hidden" />
+              <button type="button" class="file-upload-trigger" id="postal-file-trigger">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width: 15px; height: 15px; display: inline-block; vertical-align: middle; margin-right: 4px;">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                  <circle cx="8.5" cy="8.5" r="1.5"/>
+                  <polyline points="21 15 16 10 5 21"/>
+                </svg>
+                <span>Elegir imagen</span>
+              </button>
+              <span class="file-upload-name" id="postal-file-name">Sin archivo seleccionado</span>
+            </div>
+          </label>
 
-    /* DESCUBRE — lucecitas que se encienden */
-    (() => {
-      const cv = document.getElementById("discover-canvas");
-      if (!cv) return;
-      const ctx = cv.getContext("2d");
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      function resize() {
-        const r = cv.getBoundingClientRect();
-        cv.width = r.width * dpr;
-        cv.height = r.height * dpr;
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      }
-      resize();
-      new ResizeObserver(resize).observe(cv);
+          <button type="submit" class="modal-submit">
+            Guardar postal <span class="spark" aria-hidden="true">✦</span>
+          </button>
+          <button type="button" class="modal-cancel" id="postal-cancel">Cerrar</button>
+        </form>
+      </div>
+    </div>
+  </div>
 
-      const POINTS = [];
-      for (let i = 0; i < 80; i++) {
-        POINTS.push({
-          x: 0.10 + Math.random() * 0.80,
-          y: 0.15 + Math.random() * 0.70,
-          ph: Math.random() * Math.PI * 2,
-          lit: Math.random() < 0.35,
-        });
-      }
-      let t = 0;
-      function tick() {
-        t += 0.016;
-        const r = cv.getBoundingClientRect();
-        const W = r.width, H = r.height;
-        ctx.clearRect(0, 0, W, H);
+  <!-- ============ LIGHTBOX ============ -->
+  <div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="lb-name">
+    <button class="lb-close" id="lb-close" aria-label="Cerrar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <path d="M6 6l12 12M18 6L6 18" />
+      </svg>
+    </button>
+    <div class="lb-inner">
+      <div class="lb-gallery">
+        <ul class="carousel-list" id="lb-list">
+          <li class="hide"></li>
+          <li class="prev"></li>
+          <li class="act"></li>
+          <li class="next"></li>
+          <li class="new-next"></li>
+        </ul>
+        <div class="carousel-swipe" id="lb-swipe"></div>
+        <button class="lb-arrow lb-prev" id="lb-prev" aria-label="Foto anterior">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <path d="M15 6l-6 6 6 6" />
+          </svg>
+        </button>
+        <button class="lb-arrow lb-next" id="lb-next" aria-label="Siguiente foto">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <path d="M9 6l6 6-6 6" />
+          </svg>
+        </button>
+        <div class="lb-dots" id="lb-dots"></div>
+      </div>
+      <aside class="lb-card">
+        <div class="lb-meta" id="lb-meta"></div>
+        <h3 class="lb-name" id="lb-name"></h3>
+        <p class="lb-desc" id="lb-desc"></p>
+        <div class="lb-addr-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+            stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 22s7-7.58 7-13a7 7 0 1 0-14 0c0 5.42 7 13 7 13z" />
+            <circle cx="12" cy="9" r="2.5" />
+          </svg>
+          <span id="lb-addr"></span>
+        </div>
+        <div class="lb-socials" id="lb-socials"></div>
+      </aside>
+    </div>
+  </div>
 
-        for (const p of POINTS) {
-          const px = p.x * W, py = p.y * H;
-          const tw = 0.5 + Math.sin(t * 1.4 + p.ph) * 0.5;
-          if (p.lit) {
-            const grd = ctx.createRadialGradient(px, py, 0, px, py, 36);
-            grd.addColorStop(0, `rgba(255, 200, 130, ${0.55 * tw + 0.2})`);
-            grd.addColorStop(1, "rgba(255, 140, 66, 0)");
-            ctx.fillStyle = grd;
-            ctx.beginPath(); ctx.arc(px, py, 36, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = `rgba(255, 240, 210, ${0.6 + 0.3 * tw})`;
-            ctx.beginPath(); ctx.arc(px, py, 2.2, 0, Math.PI * 2); ctx.fill();
-          } else {
-            ctx.fillStyle = `rgba(250, 246, 240, 0.10)`;
-            ctx.beginPath(); ctx.arc(px, py, 1.2, 0, Math.PI * 2); ctx.fill();
-          }
-        }
-
-        if (document.getElementById("descubre").classList.contains("in")) {
-          for (const p of POINTS) {
-            if (!p.lit && Math.random() < 0.005) p.lit = true;
-          }
-        }
-
-        requestAnimationFrame(tick);
-      }
-      tick();
-    })();
-
-    /* REGISTRA — flip de la postal */
-    (() => {
-      const card = document.getElementById("postcard");
-      if (!card) return;
-      card.addEventListener("click", () => card.classList.toggle("flipped"));
-    })();
-
-    /* COMPARTE — efecto linterna que sigue al cursor */
-    (() => {
-      const scene = document.getElementById("scene-share");
-      if (!scene) return;
-      const torch = scene.querySelector(".torch");
-      const mask  = scene.querySelector(".const-mask");
-
-      function setLight(x, y) {
-        const r = scene.getBoundingClientRect();
-        const px = ((x - r.left) / r.width) * 100;
-        const py = ((y - r.top)  / r.height) * 100;
-        scene.style.setProperty("--mx", px + "%");
-        scene.style.setProperty("--my", py + "%");
-        torch.style.left = (x - r.left) + "px";
-        torch.style.top  = (y - r.top)  + "px";
-        torch.style.transform = "translate(-50%, -50%)";
-      }
-
-      scene.addEventListener("mousemove", (e) => {
-        torch.style.opacity = "1";
-        mask.style.opacity  = "1";
-        setLight(e.clientX, e.clientY);
-      });
-      scene.addEventListener("mouseleave", () => {
-        const r = scene.getBoundingClientRect();
-        scene.style.setProperty("--mx", "50%");
-        scene.style.setProperty("--my", "50%");
-        torch.style.left = (r.width / 2) + "px";
-        torch.style.top  = (r.height / 2) + "px";
-        torch.style.transform = "translate(-50%, -50%)";
-      });
-      scene.addEventListener("touchmove", (e) => {
-        const t = e.touches[0];
-        if (t) setLight(t.clientX, t.clientY);
-      }, { passive: true });
-    })();
-  </script>
+  <script src="js/script.js" defer></script>
 </body>
+
 </html>
