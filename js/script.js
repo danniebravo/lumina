@@ -184,8 +184,6 @@
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     const lucs = [...scene.querySelectorAll(".luc")];
-    const tooltip = document.getElementById("luc-tooltip");
-    const counterEl = document.getElementById("luc-count");
     const hint = document.getElementById("scene-hint");
 
     const RADIUS = 180;
@@ -193,8 +191,6 @@
     let W = 0, H = 0;
     let mouseX = -9999, mouseY = -9999;
     let active = false;
-    let savedCount = 0;
-    let interacted = false;
 
     function resize() {
       const r = scene.getBoundingClientRect();
@@ -211,7 +207,7 @@
       if (!W || !H) return;
       ctx.globalCompositeOperation = "source-over";
       ctx.clearRect(0, 0, W, H);
-      ctx.fillStyle = "rgba(7, 6, 10, 0.96)";
+      ctx.fillStyle = "rgba(11, 8, 7, 0.96)";
       ctx.fillRect(0, 0, W, H);
       if (active) {
         const g = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, RADIUS);
@@ -229,8 +225,6 @@
     }
 
     function updateLucs() {
-      let activeLuc = null;
-      let minDist = Infinity;
       const sr = scene.getBoundingClientRect();
       lucs.forEach(luc => {
         const lr = luc.getBoundingClientRect();
@@ -240,33 +234,18 @@
         const d2 = dx * dx + dy * dy;
         const lit = active && d2 < (RADIUS * 0.9) * (RADIUS * 0.9);
         luc.classList.toggle("lit", lit);
-        if (lit && d2 < minDist) {
-          minDist = d2;
-          activeLuc = { el: luc, x: lx, y: ly };
-        }
       });
-      if (activeLuc) {
-        tooltip.textContent = activeLuc.el.dataset.name;
-        tooltip.style.left = activeLuc.x + "px";
-        tooltip.style.top = (activeLuc.y - 22) + "px";
-        tooltip.classList.add("show");
-      } else {
-        tooltip.classList.remove("show");
-      }
     }
 
-    function maybeHideHint() {
-      if (interacted) return;
-      interacted = true;
-      hint.classList.add("fade");
-    }
+    function hideHint() { if (hint) hint.classList.add("fade"); }
+    function showHint() { if (hint) hint.classList.remove("fade"); }
 
     resize();
     window.addEventListener("resize", resize);
 
     scene.addEventListener("mouseenter", () => {
       active = true;
-      maybeHideHint();
+      hideHint();
     });
     scene.addEventListener("mousemove", (e) => {
       const r = scene.getBoundingClientRect();
@@ -281,13 +260,14 @@
       mouseX = mouseY = -9999;
       paint();
       updateLucs();
+      showHint();
     });
 
     scene.addEventListener("touchstart", (e) => {
       const t = e.touches[0]; if (!t) return;
       const r = scene.getBoundingClientRect();
       mouseX = t.clientX - r.left; mouseY = t.clientY - r.top;
-      active = true; maybeHideHint();
+      active = true; hideHint();
       paint(); updateLucs();
     }, { passive: true });
     scene.addEventListener("touchmove", (e) => {
@@ -296,6 +276,13 @@
       mouseX = t.clientX - r.left; mouseY = t.clientY - r.top;
       paint(); updateLucs();
     }, { passive: true });
+    scene.addEventListener("touchend", () => {
+      active = false;
+      mouseX = mouseY = -9999;
+      paint();
+      updateLucs();
+      showHint();
+    }, { passive: true });
 
     lucs.forEach(luc => {
       luc.addEventListener("click", (e) => {
@@ -303,8 +290,6 @@
         if (!luc.classList.contains("lit")) return;
         if (luc.classList.contains("saved")) return;
         luc.classList.add("saved");
-        savedCount++;
-        counterEl.textContent = savedCount;
       });
       luc.addEventListener("keydown", (e) => {
         if (e.key === "Enter" || e.key === " ") {
@@ -392,8 +377,8 @@
       ],
       photos: [
         "img/lugares/epico.webp",
-        "img/lugares/e1.webp",
-        "img/lugares/e2.webp"
+        "img/lugares/e1.jpg",
+        "img/lugares/e2.jpg"
       ]
     },
     claustro: {
@@ -428,6 +413,38 @@
         "img/lugares/t4.jpg",
         "img/lugares/t5.jpg",
         "img/lugares/t6.jpg"
+      ]
+    },
+    quintaesencia: {
+      name: "La Quintaesencia · Café y Conversa",
+      meta: "La Candelaria · Centro",
+      desc: "Café del centro pensado para la conversación lenta. Tazas grandes, mesas de madera y un ritmo que invita a quedarse.",
+      addr: "C. 50 #42-05, La Candelaria, Medellín, Antioquia",
+      socials: [
+        { type: "instagram", href: "https://www.instagram.com/laquinta.cafe", label: "Instagram" },
+        { type: "maps", href: "https://www.google.com/maps/place/La+Quintaesencia+-+Caf%C3%A9+y+Conversa/@6.2468222,-75.5647323,17z/data=!3m1!4b1!4m6!3m5!1s0x8e4429c3c55af17b:0xdf7b0f5f5cc2efaa!8m2!3d6.2468169!4d-75.5621574!16s%2Fg%2F11mlhqg_fl", label: "Ver en Google Maps" }
+      ],
+      photos: [
+        "img/lugares/quintaesencia.jpg",
+        "img/lugares/q1.jpg",
+        "img/lugares/q2.jpg",
+        "img/lugares/q3.jpg"
+      ]
+    },
+    homero: {
+      name: "Casa Cultural Homero Manzi",
+      meta: "La Candelaria · Centro",
+      desc: "Casa cultural dedicada al tango y la bohemia desde 1987. Música en vivo, milongas y una memoria que se queda.",
+      addr: "Cl. 48 #41-3, La Candelaria, Medellín, Antioquia",
+      socials: [
+        { type: "web", href: "https://infolocal.comfenalcoantioquia.com/index.php/casa-cultural-tango-homero-manzi", label: "Sitio web" },
+        { type: "instagram", href: "https://www.instagram.com/homeromanzi1987", label: "Instagram" },
+        { type: "maps", href: "https://www.google.com/maps/place/Casa+Cultural+Homero+Manzi/@6.2444956,-75.5648154,17z/data=!3m1!4b1!4m6!3m5!1s0x8e442859de0e3f1b:0x2f7f61780302ce50!8m2!3d6.2444903!4d-75.5622405!16s%2Fg%2F1tc_s1hw", label: "Ver en Google Maps" }
+      ],
+      photos: [
+        "img/lugares/homero.jpg",
+        "img/lugares/h1.jpg",
+        "img/lugares/h2.jpg"
       ]
     }
   };
@@ -722,7 +739,7 @@
       <div class="modal-success">
         <span class="spark-big" aria-hidden="true">✦</span>
         <h3>Bienvenido a Lúmina.</h3>
-        <p>Recibirás nuestra próxima carta con lugares nuevos por descubrir.</p>
+        <p>Te enviaremos nuestras recomendaciones de nuevos lugares por descubrir.</p>
         <button type="button" id="join-done">Cerrar</button>
       </div>`;
       const done = document.getElementById("join-done");
@@ -839,12 +856,12 @@
               ${isWebp ? `<source srcset="${main}" type="image/webp" />` : ""}
               <img src="${fallback}" alt="${p.name}" loading="lazy" width="800" height="1000" />
             </picture>
-            <span class="photo-pill">✦ ${p.photos.length} fotos</span>
           </div>
           <div class="place-info">
             <div class="place-meta">${p.meta}</div>
             <h3 class="place-name">${p.name}</h3>
             <p class="place-desc">${p.desc}</p>
+            <span class="photo-pill">✦ ${p.photos.length} fotos</span>
           </div>
         </article>`;
     }).join("");
@@ -943,21 +960,60 @@
       const place = PLACES[p.place];
       const placeName = place ? place.name : p.place;
       const placeMeta = place ? place.meta : "";
+      const placePhoto = p.userPhoto || (place && place.photos && place.photos[0]) || "";
+      const fromLabel = placeMeta ? `Desde ${placeMeta.split(" · ")[0]}` : "Lúmina · Medellín";
       return `
-        <article class="postal-mini">
-          <div class="postal-mini-head">
-            <span>${p.date || "Sin fecha"}</span>
-            <span>${placeMeta}</span>
+        <div class="scene-postcard postal-card">
+          <div class="tape" aria-hidden="true"></div>
+          <div class="postcard" tabindex="0" role="button" aria-label="Postal de ${escapeHtml(placeName)} — girar">
+            <div class="postcard-face postcard-front" style="background-image:url('${placePhoto}')">
+              <div class="corner"><span>Lúmina<br />Medellín</span></div>
+              <div class="place-tag">
+                <div class="label">Memoria registrada</div>
+                <div class="name">${escapeHtml(placeName)}</div>
+              </div>
+              <span class="flip-hint">Toca para girar →</span>
+            </div>
+            <div class="postcard-face postcard-back">
+              <div class="left">
+                <div class="head">
+                  <span class="date">${escapeHtml(p.date || "Sin fecha")}</span>
+                  <span class="from">${escapeHtml(fromLabel)}</span>
+                </div>
+                <div class="pname">${escapeHtml(placeName)}</div>
+                <p class="entry">${escapeHtml(p.entry)}</p>
+                <div class="stamps">
+                  <span class="stamp">Memoria</span>
+                  <span class="stamp">Lúmina</span>
+                </div>
+              </div>
+              <div class="right">
+                <div class="stamp-square">
+                  <div class="inner"></div>
+                </div>
+                <div class="address">
+                  <span class="address-label">De</span>
+                  <div class="address-line">${escapeHtml(p.name)}</div>
+                </div>
+                <div class="coords">
+                  Lúmina · Medellín<br />
+                  ${escapeHtml(placeMeta)}
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="postal-mini-place">${placeName}</div>
-          ${p.userPhoto ? `<img src="${p.userPhoto}" class="postal-mini-img" alt="" />` : ""}
-          <p class="postal-mini-entry">${escapeHtml(p.entry)}</p>
-          <div class="postal-mini-foot">
-            <span class="from">— ${escapeHtml(p.name)}</span>
-            <span>✦</span>
-          </div>
-        </article>`;
+        </div>`;
     }).join("");
+
+    grid.querySelectorAll(".postal-card .postcard").forEach(card => {
+      card.addEventListener("click", () => card.classList.toggle("flipped"));
+      card.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          card.classList.toggle("flipped");
+        }
+      });
+    });
   }
 
   function escapeHtml(s) {
@@ -1207,6 +1263,9 @@
               setTimeout(() => { btn.classList.remove("copied"); }, 1800);
             }).catch(() => {});
           }
+
+          // Cerrar este modal antes de mostrar el toast — nunca dos modales a la vez
+          close();
 
           // Trigger simulated Toast with exact custom parameters!
           showToast(platformName, text, url, placeKey, photoUrl, photoName);

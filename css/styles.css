@@ -15,7 +15,7 @@
   --ember: #c46a32;
   --accent-glow: rgba(255, 174, 107, 0.55);
 
-  --night: #07060a;
+  --night: #060403;
   --night-2: #110b08;
 
   --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
@@ -51,7 +51,7 @@ html {
 
 body {
   overflow-x: hidden;
-  background: var(--night);
+  background: var(--bg);
 }
 
 a {
@@ -110,11 +110,17 @@ img {
   align-items: center;
   column-gap: 24px;
   padding: 10px 18px;
-  background: rgba(7, 6, 10, 0.55);
+  background: rgba(7, 6, 10, 0.78);
   backdrop-filter: blur(18px) saturate(140%);
   -webkit-backdrop-filter: blur(18px) saturate(140%);
   border: 1px solid var(--line);
   border-radius: var(--r-pill);
+}
+
+/* Anchor links no caen tapados por el navbar */
+section[id],
+main[id] {
+  scroll-margin-top: 96px;
 }
 
 .nav .brand {
@@ -381,14 +387,6 @@ img {
   color: var(--honey);
 }
 
-.hero-sub {
-  max-width: 34ch;
-  font-size: 17px;
-  line-height: 1.55;
-  color: rgba(250, 246, 240, 0.86);
-  margin-bottom: 34px;
-}
-
 .hero-cta {
   display: inline-flex;
   align-items: center;
@@ -522,7 +520,7 @@ section.step {
 
 /* ============ El lugar — silueta Medellín ============ */
 #descubre {
-  background: linear-gradient(180deg, var(--night) 0%, #080603 100%);
+  background: var(--bg);
 }
 
 .scene-iluminar {
@@ -534,10 +532,30 @@ section.step {
   margin: 0 auto;
   border-radius: var(--r-lg);
   overflow: hidden;
-  background: linear-gradient(180deg, #0a0604 0%, #1d130a 100%);
+  background: var(--bg);
   cursor: crosshair;
-  border: 1px solid rgba(255, 174, 107, 0.10);
   isolation: isolate;
+}
+
+.scene-iluminar::before,
+.scene-iluminar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 90px;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.scene-iluminar::before {
+  top: 0;
+  background: linear-gradient(180deg, var(--bg) 0%, transparent 100%);
+}
+
+.scene-iluminar::after {
+  bottom: 0;
+  background: linear-gradient(0deg, var(--bg) 0%, transparent 100%);
 }
 
 /* Capa 1 · backdrop SVG de Medellin nocturno */
@@ -551,6 +569,22 @@ section.step {
   pointer-events: none;
 }
 
+/* Capa 1.5 · silueta de Medellín (PNG) — sobre el SVG, bajo el canvas */
+.scene-silhouette {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+  z-index: 2;
+  pointer-events: none;
+  display: block;
+  user-select: none;
+  mix-blend-mode: multiply;
+  filter: brightness(0.85) contrast(0.55) saturate(0);
+}
+
 /* Capa 2 · luciernagas (sobre el backdrop, debajo del canvas; eleva pointer-events) */
 .luciernagas {
   position: absolute;
@@ -561,32 +595,33 @@ section.step {
 
 .luc {
   position: absolute;
-  width: 9px;
-  height: 9px;
+  width: 5px;
+  height: 5px;
   padding: 0;
   border: none;
   border-radius: 50%;
   background: var(--honey);
-  box-shadow: 0 0 8px var(--honey), 0 0 20px rgba(255, 174, 107, 0.55);
+  opacity: 0.55;
+  box-shadow: 0 0 6px rgba(240, 177, 90, 0.45);
   transform: translate(-50%, -50%);
   pointer-events: auto;
   cursor: pointer;
   z-index: 5;
-  animation: lucPulse 3.2s ease-in-out infinite;
-  transition: transform .35s ease, box-shadow .35s ease, background .35s ease;
+  animation: lucPulse 5.5s ease-in-out infinite;
+  transition: opacity .5s ease, box-shadow .5s ease, background .5s ease;
 }
 @keyframes lucPulse {
-  0%, 100% { opacity: 0.7; }
-  50%      { opacity: 1; }
+  0%, 100% { opacity: 0.45; }
+  50%      { opacity: 0.75; }
 }
 .luc.lit {
-  transform: translate(-50%, -50%) scale(1.7);
-  box-shadow: 0 0 14px var(--accent-2), 0 0 36px var(--accent);
-  animation: lucBurst 1.4s ease-in-out infinite;
+  opacity: 1;
+  box-shadow: 0 0 8px var(--accent-2), 0 0 18px rgba(255, 174, 107, 0.55);
+  animation: lucBurst 3s ease-in-out infinite;
 }
 @keyframes lucBurst {
-  0%, 100% { box-shadow: 0 0 14px var(--accent-2), 0 0 32px var(--accent); }
-  50%      { box-shadow: 0 0 20px var(--accent-2), 0 0 52px var(--accent); }
+  0%, 100% { box-shadow: 0 0 8px var(--accent-2), 0 0 18px rgba(255, 174, 107, 0.55); }
+  50%      { box-shadow: 0 0 10px var(--accent-2), 0 0 24px rgba(255, 174, 107, 0.7); }
 }
 .luc.saved {
   background: var(--accent-2);
@@ -608,57 +643,7 @@ section.step {
   display: block;
 }
 
-/* Capa 4 · tooltip del nombre */
-.luc-tooltip {
-  position: absolute;
-  font-family: var(--font-display);
-  font-style: italic;
-  font-weight: 500;
-  font-size: 19px;
-  color: var(--fg);
-  background: rgba(7, 6, 10, 0.72);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 174, 107, 0.32);
-  padding: 6px 14px;
-  border-radius: var(--r-pill);
-  pointer-events: none;
-  white-space: nowrap;
-  opacity: 0;
-  transform: translate(-50%, -100%);
-  transition: opacity .25s ease;
-  z-index: 6;
-  letter-spacing: 0.01em;
-}
-.luc-tooltip.show { opacity: 1; }
-
-/* Capa 5 · contador */
-.luc-counter {
-  position: absolute;
-  top: 18px;
-  right: 18px;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 14px;
-  background: rgba(7, 6, 10, 0.78);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 194, 102, 0.32);
-  border-radius: var(--r-pill);
-  font-size: 11.5px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--fg);
-  z-index: 7;
-  pointer-events: none;
-}
-.luc-counter-spark {
-  color: var(--honey);
-  font-size: 13px;
-}
-
-/* Capa 6 · hint inicial */
+/* Capa · hint inicial */
 .scene-hint {
   position: absolute;
   left: 50%;
@@ -672,14 +657,16 @@ section.step {
   pointer-events: none;
   text-align: center;
   z-index: 8;
-  text-shadow: 0 0 20px rgba(0, 0, 0, 0.9);
-  transition: opacity .6s ease, transform .6s ease;
+  text-shadow:
+    0 0 10px rgba(255, 194, 102, 0.55),
+    0 0 22px rgba(240, 177, 90, 0.35),
+    0 0 30px rgba(0, 0, 0, 0.9);
+  transition: opacity .4s ease;
   letter-spacing: 0.01em;
   white-space: nowrap;
 }
 .scene-hint.fade {
   opacity: 0;
-  transform: translate(-50%, -50%) scale(0.96);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -718,7 +705,8 @@ section.step {
 }
 
 .lugares-head .hint {
-  font-size: 14px;
+  font-size: 17px;
+  line-height: 1.65;
   color: var(--muted);
   max-width: 52ch;
 }
@@ -784,6 +772,8 @@ section.step {
 }
 
 .place-card .place-info {
+  display: flex;
+  flex-direction: column;
   padding: 0 4px;
 }
 
@@ -821,20 +811,21 @@ section.step {
   line-height: 1.5;
 }
 
-.place-card .stack .photo-pill {
-  position: absolute;
-  bottom: 14px;
-  right: 14px;
+.place-card .photo-pill {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  margin-top: 14px;
   font-size: 10px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--fg);
   background: rgba(7, 6, 10, 0.78);
   backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   border: 1px solid rgba(255, 194, 102, 0.32);
-  padding: 6px 10px;
+  padding: 6px 12px;
   border-radius: var(--r-pill);
-  z-index: 6;
 }
 
 .place-card:focus-visible {
@@ -861,10 +852,12 @@ section.step {
   position: absolute;
   inset: 0;
   transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
   transform: rotateY(0deg);
   transition: transform 1s cubic-bezier(.2, .7, .2, 1);
   cursor: pointer;
   outline: none;
+  will-change: transform;
 }
 
 .postcard:focus-visible {
@@ -886,7 +879,12 @@ section.step {
   box-shadow:
     0 30px 80px -20px rgba(0, 0, 0, 0.7),
     0 0 0 1px rgba(255, 174, 107, 0.18);
-  overflow: hidden;
+  /* No usar overflow:hidden aquí — rompe backface-visibility en Safari/iOS.
+     Para clipear las esquinas redondeadas usamos clip-path. */
+  clip-path: inset(0 round 8px);
+  -webkit-clip-path: inset(0 round 8px);
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 
 .postcard-front {
@@ -911,8 +909,9 @@ section.step {
   position: absolute;
   top: 18px;
   right: 18px;
-  width: 70px;
-  height: 90px;
+  width: 80px;
+  height: 96px;
+  padding: 8px 6px;
   border: 2px solid rgba(255, 255, 255, 0.55);
   background: rgba(255, 174, 107, 0.18);
   backdrop-filter: blur(6px);
@@ -925,12 +924,13 @@ section.step {
 .postcard-front .corner span {
   font-family: var(--font-display);
   font-style: italic;
-  font-size: 11px;
-  letter-spacing: 0.18em;
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #fff;
   text-align: center;
-  line-height: 1.2;
+  line-height: 1.35;
+  white-space: nowrap;
 }
 
 .postcard-front .place-tag {
@@ -994,7 +994,8 @@ section.step {
 }
 
 .postcard-back {
-  transform: rotateY(180deg);
+  transform: rotateY(180deg) translateZ(0);
+  -webkit-transform: rotateY(180deg) translateZ(0);
   background: linear-gradient(180deg, #f6efdf 0%, #ede1c4 100%);
   color: #2b1a0e;
   display: grid;
@@ -1089,18 +1090,13 @@ section.step {
 .postcard-back .stamp-square .inner {
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle at 30% 30%, var(--honey), var(--ember));
+  background:
+    url("../img/logo/lumina-logo.png") center / auto 62% no-repeat,
+    radial-gradient(circle at 30% 30%, var(--honey), var(--ember));
   border-radius: 2px;
   position: relative;
   display: grid;
   place-items: center;
-}
-
-.postcard-back .stamp-square .inner::before {
-  content: "✦";
-  color: #fff8e8;
-  font-size: 26px;
-  filter: drop-shadow(0 0 6px rgba(255, 220, 160, 0.7));
 }
 
 .postcard-back .address {
@@ -1175,7 +1171,6 @@ section.step {
       var(--bg-warm) 0%,
       var(--bg-elev) 50%,
       var(--bg) 100%);
-  border: 1px solid rgba(255, 174, 107, 0.10);
 }
 
 .scene-share::before {
@@ -1861,24 +1856,32 @@ body.lb-open {
   position: relative;
   width: 100%;
   max-width: 460px;
+  max-height: calc(100vh - 40px);
   padding: 40px;
   background: var(--bg-elev);
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
   box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.7);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .modal-close {
-  position: absolute;
-  top: 14px;
-  right: 14px;
+  position: sticky;
+  top: 0;
+  margin-left: auto;
+  margin-bottom: -36px;
   width: 36px;
   height: 36px;
   display: grid;
   place-items: center;
   color: var(--muted);
+  background: rgba(21, 16, 12, 0.85);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   border-radius: 50%;
   border: 1px solid transparent;
+  z-index: 2;
   transition: color .2s ease, border-color .2s ease, background .2s ease;
 }
 
@@ -1897,9 +1900,10 @@ body.lb-open {
   font-family: var(--font-display);
   font-style: italic;
   font-weight: 500;
-  font-size: 32px;
-  line-height: 1.1;
+  font-size: clamp(24px, 5vw, 32px);
+  line-height: 1.15;
   margin-bottom: 12px;
+  padding-right: 48px;
   background: linear-gradient(120deg, var(--accent), var(--honey));
   -webkit-background-clip: text;
   background-clip: text;
@@ -2262,10 +2266,6 @@ body.modal-open {
     padding: 110px 28px 70px;
   }
 
-  .hero-sub {
-    font-size: 16px;
-  }
-
   .lugares {
     padding: 100px 28px;
   }
@@ -2349,21 +2349,23 @@ body.modal-open {
   }
 }
 
-@media (max-width: 640px) {
-  .nav .brand .wordmark {
-    display: none;
-  }
-}
-
-@media (max-width: 540px) {
-  .modal-card {
-    padding: 30px 20px;
+@media (max-width: 768px) {
+  /* Escena Descubre · más visible en móvil (la linterna aún funciona por touch) */
+  .scene-veil {
+    opacity: 0.55;
   }
 
-  .footer-grid {
-    grid-template-columns: 1fr;
+  .scene-silhouette {
+    filter: brightness(1) contrast(0.75) saturate(0);
+    opacity: 0.95;
   }
 
+  .scene-iluminar::before,
+  .scene-iluminar::after {
+    height: 60px;
+  }
+
+  /* Postal del home · stack vertical desde 768px */
   .scene-postcard {
     aspect-ratio: 5 / 4;
   }
@@ -2377,8 +2379,156 @@ body.modal-open {
     border-bottom: 1.5px dashed rgba(43, 26, 14, 0.25);
   }
 
+  /* Postales grid · una sola columna en móvil */
+  .postales-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  /* Modales más compactos */
+  .modal-card {
+    padding: 32px 22px;
+  }
+}
+
+@media (max-width: 640px) {
+  .nav .brand .wordmark {
+    display: none;
+  }
+}
+
+@media (max-width: 540px) {
+  .modal-card {
+    padding: 28px 18px;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+
   .lb-name {
     font-size: 26px;
+  }
+
+  /* Postal flip · escalar contenido para móvil pequeño */
+  .postcard-front .place-tag {
+    bottom: 18px;
+    left: 20px;
+    right: 20px;
+  }
+  .postcard-front .place-tag .name {
+    font-size: clamp(20px, 6vw, 26px);
+    line-height: 1.05;
+  }
+  .postcard-front .place-tag .label {
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+  }
+  .postcard-front .flip-hint {
+    bottom: 18px;
+    right: 20px;
+    padding: 7px 12px;
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+  }
+  .postcard-front .corner {
+    top: 14px;
+    right: 14px;
+    width: 62px;
+    height: 76px;
+    padding: 6px 4px;
+  }
+  .postcard-front .corner span {
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    line-height: 1.3;
+  }
+
+  .postcard-back .left,
+  .postcard-back .right {
+    padding: 18px 16px 16px;
+  }
+  .postcard-back .head .date {
+    font-size: 11.5px;
+  }
+  .postcard-back .head .from {
+    font-size: 8.5px;
+  }
+  .postcard-back .pname {
+    font-size: clamp(18px, 5vw, 22px);
+    margin-bottom: 10px;
+  }
+  .postcard-back .entry {
+    font-size: clamp(12px, 3.6vw, 14px);
+    line-height: 1.45;
+  }
+  .postcard-back .stamp {
+    font-size: 8.5px;
+    padding: 3px 7px;
+  }
+  .postcard-back .stamp-square {
+    width: 58px;
+    height: 70px;
+    padding: 5px;
+  }
+  .postcard-back .address-label {
+    font-size: 11.5px;
+  }
+  .postcard-back .address-line {
+    font-size: 12.5px;
+  }
+  .postcard-back .coords {
+    font-size: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Espaciados más compactos para evitar overflow */
+  section.step {
+    padding: 80px 20px;
+  }
+
+  .hero {
+    padding: 96px 20px 60px;
+  }
+
+  .lugares {
+    padding: 80px 20px;
+  }
+
+  .closing {
+    padding: 100px 20px 110px;
+  }
+
+  .site-footer {
+    padding: 50px 20px 32px;
+  }
+
+  .subview {
+    padding: 100px 20px 80px;
+  }
+
+  /* CTAs y botones que pueden desbordar */
+  .section-cta,
+  .closing-cta,
+  .hero-cta {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .postal-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .postal-actions .section-cta,
+  .postal-actions .section-ghost {
+    justify-content: center;
+  }
+
+  /* Constelación cabe sin desbordar */
+  .scene-share {
+    max-width: 100%;
   }
 }
 
@@ -2540,71 +2690,30 @@ body.subview-open > .progress {
   line-height: 1.55;
 }
 
+.subview-head-cta {
+  margin-top: 28px;
+}
+
 .subview-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 28px;
 }
 
-/* ============ Postales grid ============ */
+/* ============ Postales grid · postales como tarjeta flip ============ */
 .postales-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(min(380px, 100%), 1fr));
+  gap: 48px 36px;
 }
 
-.postal-mini {
-  background: linear-gradient(140deg, #efe6d4 0%, #e3d2b3 100%);
-  color: #2b1a0e;
-  padding: 22px 22px 24px;
-  border-radius: var(--r-md);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  min-height: 220px;
+.postales-grid .postal-card {
+  max-width: none;
+  margin: 0;
 }
 
-.postal-mini-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 12px;
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(43, 26, 14, 0.62);
-}
-
-.postal-mini-place {
-  font-family: var(--font-display);
-  font-size: 22px;
-  font-weight: 500;
-  line-height: 1.15;
-  color: #2b1a0e;
-  letter-spacing: -0.01em;
-}
-
-.postal-mini-entry {
-  font-size: 14px;
-  line-height: 1.55;
-  color: rgba(43, 26, 14, 0.85);
-  flex: 1;
-}
-
-.postal-mini-foot {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 12px;
-  color: rgba(43, 26, 14, 0.62);
-  border-top: 1.5px dashed rgba(43, 26, 14, 0.22);
-  padding-top: 12px;
-}
-
-.postal-mini-foot .from {
-  font-style: italic;
+.postales-grid .postal-card .tape {
+  left: 18%;
 }
 
 /* ============ Postal form · extras ============ */
@@ -2723,7 +2832,7 @@ body.subview-open > .progress {
   color: var(--fg);
   font-family: inherit;
   box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.85), 0 0 24px rgba(255, 174, 107, 0.08);
-  width: 340px;
+  width: min(340px, calc(100vw - 48px));
   backdrop-filter: blur(20px) saturate(140%);
   -webkit-backdrop-filter: blur(20px) saturate(140%);
   pointer-events: auto;
@@ -2857,16 +2966,6 @@ body.subview-open > .progress {
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 200px;
-}
-
-/* ============ Postcard Miniature Photo ============ */
-.postal-mini-img {
-  width: 100%;
-  height: 140px;
-  object-fit: cover;
-  border-radius: 6px;
-  border: 1px solid rgba(43, 26, 14, 0.15);
-  margin-top: 4px;
 }
 
 /* ============ Success Screen Social Share ============ */
