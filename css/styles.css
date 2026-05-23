@@ -2218,8 +2218,11 @@ body.modal-open {
 
 @media (max-width: 900px) {
   .nav {
+    top: 22px;
+    left: 20px;
+    right: 20px;
     grid-template-columns: 1fr auto;
-    padding: 8px 14px;
+    padding: 10px 16px;
   }
 
   .nav-links {
@@ -2402,8 +2405,57 @@ body.modal-open {
     padding: 28px 18px;
   }
 
+  /* Footer · una columna y espaciado parejo */
+  .site-footer {
+    padding: 56px 24px 32px;
+  }
+
   .footer-grid {
     grid-template-columns: 1fr;
+    gap: 28px;
+    margin-bottom: 24px;
+  }
+
+  .footer-brand-col {
+    grid-column: 1;
+    margin-bottom: 0;
+  }
+
+  .footer-brand img {
+    width: 36px;
+    height: 36px;
+  }
+
+  .footer-wordmark {
+    font-size: 24px;
+  }
+
+  .footer-tag {
+    font-size: 15px;
+    max-width: none;
+  }
+
+  /* Enlaces del footer · dos columnas dentro de cada bloque */
+  .footer-col {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 14px;
+    row-gap: 2px;
+  }
+
+  .footer-col h4 {
+    grid-column: 1 / -1;
+    margin-bottom: 8px;
+  }
+
+  .footer-col.footer-social .social-icons {
+    grid-column: 1 / -1;
+    gap: 12px;
+    margin-top: 4px;
+  }
+
+  .footer-bottom {
+    padding-top: 22px;
   }
 
   .lb-name {
@@ -2483,13 +2535,20 @@ body.modal-open {
 }
 
 @media (max-width: 480px) {
+  /* Navbar con un poco más de aire respecto al borde superior */
+  .nav {
+    top: 24px;
+    left: 16px;
+    right: 16px;
+  }
+
   /* Espaciados más compactos para evitar overflow */
   section.step {
     padding: 80px 20px;
   }
 
   .hero {
-    padding: 96px 20px 60px;
+    padding: 110px 20px 60px;
   }
 
   .lugares {
@@ -2501,7 +2560,12 @@ body.modal-open {
   }
 
   .site-footer {
-    padding: 50px 20px 32px;
+    padding: 48px 20px 28px;
+  }
+
+  .footer-bottom {
+    font-size: 11px;
+    line-height: 1.55;
   }
 
   .subview {
